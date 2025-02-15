@@ -27,9 +27,6 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Fichiers de log
-*.log
-
 # Cache
 /var/
 /cache/
