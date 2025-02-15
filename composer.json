@@ -17,5 +17,12 @@
         "psr-4": {
             "Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "phpunit": {
+            "extensions": [
+                "ApprovalTests\\PHPUnit\\ApprovalTestsExtension"
+            ]
+        }
     }
 } 
