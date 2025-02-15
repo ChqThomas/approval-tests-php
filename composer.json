@@ -1,7 +1,8 @@
 {
-    "name": "approvals/approvals-php",
+    "name": "chqthomas/approval-tests",
     "description": "Approval Tests Library for PHP",
     "type": "library",
+    "license": "MIT",
     "require": {
         "php": ">=7.4"
     },
