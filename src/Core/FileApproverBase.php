@@ -2,11 +2,14 @@
 
 namespace ApprovalTests\Core;
 
+use ApprovalTests\ApprovalException;
 use ApprovalTests\Configuration;
 use ApprovalTests\CustomApprovalException;
 use ApprovalTests\Writer\ApprovalWriter;
 use ApprovalTests\Writer\TextWriter;
+use ApprovalTests\Writer\BinaryWriter;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 abstract class FileApproverBase
@@ -86,7 +89,7 @@ abstract class FileApproverBase
     protected function formatFileLink(string $path): string
     {
         $realPath = realpath($path);
-        $url = sprintf('phpstorm://open?file=%s', rawurlencode($realPath));
+        $url = sprintf('phpstorm://open?file=%s&line=%s', rawurlencode($realPath), 0);
         return sprintf("\x1b]8;;%s\x1b\\%s\x1b]8;;\x1b\\", $url, $realPath);
     }
 
@@ -127,10 +130,8 @@ abstract class FileApproverBase
     ): void {
         $messageType = $isBinary ? 'binaire' : '';
         $message = sprintf(
-            "[ApprovalTests] Le contenu %sreçu ne correspond pas au contenu approuvé\n" .
             "Received: %s\n" .
             "Approved: %s",
-            $messageType ? "$messageType " : '',
             $this->formatFileLink($receivedPath),
             $this->formatFileLink($approvedPath)
         );
@@ -154,7 +155,15 @@ abstract class FileApproverBase
 
     protected function formatTextForDiff(string $text): string
     {
-        // Assure que le texte se termine par une nouvelle ligne pour un meilleur affichage
+        // Convertir tous les CRLF et CR en LF
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        
+        // Supprimer les espaces en fin de ligne
+        $lines = explode("\n", $text);
+        $lines = array_map('rtrim', $lines);
+        $text = implode("\n", $lines);
+        
+        // S'assurer que le texte se termine par une nouvelle ligne
         return rtrim($text) . "\n";
     }
 
