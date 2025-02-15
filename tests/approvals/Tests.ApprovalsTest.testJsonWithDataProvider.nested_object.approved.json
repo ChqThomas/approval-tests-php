@@ -1,0 +1,9 @@
+{
+    "user": {
+        "name": "John",
+        "address": {
+            "city": "Paris",
+            "country": "France"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+# Composer
+/vendor/
+composer.lock
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache/
+
+# Fichiers received des tests d'approbation
+*.received.*
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fichiers de configuration locaux
+.env
+.env.local
+.env.*.local
+
+# Fichiers de log
+*.log
+
+# Cache
+/var/
+/cache/
+
+# Fichiers de build
+/build/
+/dist/
+
+# Fichiers de couverture de code
+/coverage/
+clover.xml 

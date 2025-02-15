@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+            <root>
+                <user id="1" type="admin">
+                    <name>John</name>
+                    <roles>
+                        <role>admin</role>
+                        <role>user</role>
+                    </roles>
+                </user>
+            </root>
