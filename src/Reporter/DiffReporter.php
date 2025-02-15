@@ -53,10 +53,10 @@ class DiffReporter implements ReporterInterface
             }
         }
 
-        throw new \RuntimeException(
-            "Aucun outil de diff n'a été trouvé. Veuillez installer l'un des outils suivants : " .
-            implode(', ', array_keys($this->diffTools))
-        );
+//        throw new \RuntimeException(
+//            "Aucun outil de diff n'a été trouvé. Veuillez installer l'un des outils suivants : " .
+//            implode(', ', array_keys($this->diffTools))
+//        );
     }
 
     private function getOperatingSystem(): string
