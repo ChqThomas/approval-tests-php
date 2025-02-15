@@ -27,4 +27,4 @@ class BinaryFileWriter implements ApprovalWriter
     {
         return $this->extension;
     }
-} 
+}

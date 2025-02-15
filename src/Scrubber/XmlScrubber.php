@@ -9,11 +9,11 @@ class XmlScrubber extends ScrubberBase
         $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
-        
+
         // Charger le XML
         @$dom->loadXML($content);
-        
+
         // Sauvegarder avec la déclaration XML
         return trim($dom->saveXML());
     }
-} 
+}

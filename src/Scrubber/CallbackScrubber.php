@@ -17,4 +17,4 @@ class CallbackScrubber implements Scrubber
     {
         return ($this->callback)($content);
     }
-} 
+}

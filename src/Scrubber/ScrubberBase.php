@@ -39,4 +39,4 @@ abstract class ScrubberBase implements Scrubber
     {
         return $content;
     }
-} 
+}

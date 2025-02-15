@@ -11,7 +11,7 @@ class ApprovalsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $approvalsDir = __DIR__ . '/approvals';
         if (!is_dir($approvalsDir)) {
             mkdir($approvalsDir, 0777, true);
@@ -81,10 +81,10 @@ class ApprovalsTest extends TestCase
             ['name' => 'John', 'age' => 30],
             ['name' => 'Jane', 'age' => 25],
         ];
-        
+
         Approvals::verifyAll(
             $users,
-            fn($user) => "Name: {$user['name']}, Age: {$user['age']}"
+            fn ($user) => "Name: {$user['name']}, Age: {$user['age']}"
         );
     }
 
@@ -99,11 +99,11 @@ class ApprovalsTest extends TestCase
     public function testVerifyWithExtensionAndScrubber(): void
     {
         $content = "Date: 2024-01-01\nID: 12345\nContent: Test";
-        
+
         Approvals::verifyWithExtension(
             $content,
             "log",
-            function($text) {
+            function ($text) {
                 // Remplacer la date et l'ID par des valeurs fixes
                 $text = preg_replace('/Date: \d{4}-\d{2}-\d{2}/', 'Date: YYYY-MM-DD', $text);
                 $text = preg_replace('/ID: \d+/', 'ID: XXXXX', $text);
@@ -116,10 +116,10 @@ class ApprovalsTest extends TestCase
     {
         $operations = ['+', '-', '*', '/'];
         $numbers = [1, 2, 3];
-        
+
         Approvals::verifyAllCombinations(
-            function($op, $a, $b) {
-                switch($op) {
+            function ($op, $a, $b) {
+                switch ($op) {
                     case '+': return $a + $b;
                     case '-': return $a - $b;
                     case '*': return $a * $b;
@@ -207,4 +207,4 @@ class ApprovalsTest extends TestCase
             ]
         ];
     }
-} 
+}

@@ -16,4 +16,4 @@ class UseReporter
     {
         return $this->reporters;
     }
-} 
+}

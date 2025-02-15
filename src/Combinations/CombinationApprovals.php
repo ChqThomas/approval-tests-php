@@ -16,7 +16,7 @@ class CombinationApprovals
 
         foreach ($combinations as $combination) {
             $result = $func(...$combination);
-            $formattedParams = implode(', ', array_map(fn($p) => var_export($p, true), $combination));
+            $formattedParams = implode(', ', array_map(fn ($p) => var_export($p, true), $combination));
             $formattedResult = $formatter ? $formatter($result) : var_export($result, true);
             $results[] = "({$formattedParams}) => {$formattedResult}";
         }
@@ -43,4 +43,4 @@ class CombinationApprovals
 
         return $result;
     }
-} 
+}

@@ -36,4 +36,4 @@ class Configuration
     {
         return $this->frontLoadedReporter ?? ReporterFactory::getDefaultReporter();
     }
-} 
+}

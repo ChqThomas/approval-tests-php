@@ -13,4 +13,4 @@ class ApprovalTestsExtension implements Extension
     {
         $facade->registerSubscriber(new TestListener());
     }
-} 
+}

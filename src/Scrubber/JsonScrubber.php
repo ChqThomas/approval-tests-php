@@ -9,4 +9,4 @@ class JsonScrubber extends ScrubberBase
         $data = json_decode($content);
         return json_encode($data, JSON_PRETTY_PRINT);
     }
-} 
+}

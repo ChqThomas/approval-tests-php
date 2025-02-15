@@ -14,7 +14,7 @@ use ApprovalTests\Scrubber\CsvScrubber;
 
 class Approvals
 {
-    public static function verify($objectToVerify): void 
+    public static function verify($objectToVerify): void
     {
         $approver = new FileApprover();
         $text = is_string($objectToVerify) ? $objectToVerify : json_encode($objectToVerify, JSON_PRETTY_PRINT);
@@ -29,7 +29,7 @@ class Approvals
         $approver->verify($html, new HtmlScrubber(), $writer);
     }
 
-    public static function verifyJson(string $json): void 
+    public static function verifyJson(string $json): void
     {
         $approver = new FileApprover();
         $formattedJson = json_encode(json_decode($json), JSON_PRETTY_PRINT);
@@ -61,7 +61,7 @@ class Approvals
 
     public static function verifyAll(array $items, ?callable $formatter = null): void
     {
-        $formatter = $formatter ?? fn($item) => (string)$item;
+        $formatter = $formatter ?? fn ($item) => (string)$item;
         $text = implode("\n", array_map($formatter, $items));
         $approver = new FileApprover();
         $approver->verify($text);
@@ -71,7 +71,7 @@ class Approvals
     {
         $approver = new FileApprover();
         $writer = new TextWriter($text, $extension);
-        
+
         if ($scrubber) {
             $scrubbedText = $scrubber($text);
             $writer = new TextWriter($scrubbedText, $extension);
@@ -97,10 +97,10 @@ class Approvals
         $approver->verify($content);
     }
 
-    public static function verifyCsv(string $csv): void 
+    public static function verifyCsv(string $csv): void
     {
         $approver = new FileApprover();
         $writer = new TextWriter($csv, 'csv');
         $approver->verify($csv, new CsvScrubber(), $writer);
     }
-} 
+}

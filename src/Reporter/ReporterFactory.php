@@ -29,4 +29,4 @@ class ReporterFactory
     {
         self::$defaultReporter = $reporter;
     }
-} 
+}

@@ -9,4 +9,4 @@ class BeyondCompareReporter implements ReporterInterface
         $command = sprintf('bcompare "%s" "%s"', $receivedFile, $approvedFile);
         exec($command);
     }
-} 
+}

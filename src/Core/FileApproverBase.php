@@ -14,23 +14,29 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 
 abstract class FileApproverBase
 {
+    /** @var string */
+    private $approvedFile;
+
+    /** @var string */
+    private $receivedFile;
+
     protected function getReporter()
     {
         return Configuration::getInstance()->getReporter();
     }
 
     abstract protected function getNamer(): ApprovalNamer;
-    
+
     protected function normalizeLineEndings(string $text): string
     {
         // Convertit tous les \r\n et \r en \n
         $text = str_replace(["\r\n", "\r"], "\n", $text);
-        
+
         // Supprime les espaces en fin de ligne
         $lines = explode("\n", $text);
         $lines = array_map('rtrim', $lines);
         $text = implode("\n", $lines);
-        
+
         // Supprime les lignes vides à la fin
         return rtrim($text);
     }
@@ -39,7 +45,7 @@ abstract class FileApproverBase
     {
         $receivedText = $this->prepareReceivedText($received, $scrubber);
         $writer = $this->prepareWriter($receivedText, $writer);
-        
+
         $files = $this->prepareFiles($writer);
         $this->writeReceivedFile($files['received'], $writer);
 
@@ -82,7 +88,7 @@ abstract class FileApproverBase
         throw new CustomApprovalException(
             "Nouveau test : veuillez vérifier le fichier received et le copier dans approved s'il est correct.\n",
             $files['approved'],
-            $files['received'],
+            $files['received']
         );
     }
 
@@ -148,8 +154,7 @@ abstract class FileApproverBase
         throw new CustomApprovalException(
             $message . $failure->getDiff(),
             $approvedPath,
-            $receivedPath,
-
+            $receivedPath
         );
     }
 
@@ -157,12 +162,12 @@ abstract class FileApproverBase
     {
         // Convertir tous les CRLF et CR en LF
         $text = str_replace(["\r\n", "\r"], "\n", $text);
-        
+
         // Supprimer les espaces en fin de ligne
         $lines = explode("\n", $text);
         $lines = array_map('rtrim', $lines);
         $text = implode("\n", $lines);
-        
+
         // S'assurer que le texte se termine par une nouvelle ligne
         return rtrim($text) . "\n";
     }
@@ -177,4 +182,4 @@ abstract class FileApproverBase
         // Vérifie si le contenu contient des caractères non imprimables
         return preg_match('/[^\x20-\x7E\t\r\n]/', $content) === 1;
     }
-} 
+}

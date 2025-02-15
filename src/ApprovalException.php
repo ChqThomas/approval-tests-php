@@ -23,4 +23,4 @@ class ApprovalException extends \Exception
     {
         return $this->receivedFile;
     }
-} 
+}

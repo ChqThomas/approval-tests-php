@@ -28,4 +28,4 @@ class CustomApprovalException extends AssertionFailedError
     {
         return $this->receivedFile;
     }
-} 
+}

@@ -24,4 +24,4 @@ class FileApprover extends FileApproverBase
     {
         $this->namer = $namer;
     }
-} 
+}

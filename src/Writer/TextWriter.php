@@ -27,4 +27,4 @@ class TextWriter implements ApprovalWriter
     {
         return $this->extension;
     }
-} 
+}

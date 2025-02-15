@@ -15,7 +15,7 @@ class TestNamer implements ApprovalNamer
     public function __construct()
     {
         $trace = debug_backtrace();
-        
+
         foreach ($trace as $item) {
             if (isset($item['object']) && $item['object'] instanceof TestCase) {
                 $testCase = $item['object'];
@@ -24,7 +24,7 @@ class TestNamer implements ApprovalNamer
 
                 // Récupérer le nom du dataset via la méthode toString()
                 $testName = $testCase->toString();
-                
+
                 // Le format est généralement: "testMethod with data set #0 (arg1, arg2)"
                 // ou "testMethod with data set "name" (arg1, arg2)"
                 if (preg_match('/with data set [#"]([^")]+)/', $testName, $matches)) {
@@ -39,17 +39,17 @@ class TestNamer implements ApprovalNamer
         }
     }
 
-    public function getApprovedFile(): string 
+    public function getApprovedFile(): string
     {
         return $this->getFileBase() . '.approved';
     }
 
-    public function getReceivedFile(): string 
+    public function getReceivedFile(): string
     {
         return $this->getFileBase() . '.received';
     }
 
-    private function getFileBase(): string 
+    private function getFileBase(): string
     {
         $reflector = new \ReflectionClass($this->testClass);
         $testDirectory = dirname($reflector->getFileName());
@@ -76,4 +76,4 @@ class TestNamer implements ApprovalNamer
         // Remplace les caractères non autorisés dans les noms de fichiers
         return preg_replace('/[^a-zA-Z0-9._-]/', '_', $name);
     }
-} 
+}

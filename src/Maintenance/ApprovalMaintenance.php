@@ -8,7 +8,7 @@ class ApprovalMaintenance
     {
         $approvedFiles = self::findApprovedFiles();
         $abandonedFiles = self::findAbandonedFiles($approvedFiles, $ignoredFiles);
-        
+
         if (!empty($abandonedFiles)) {
             throw new \RuntimeException(
                 "Les fichiers approved suivants n'ont plus de tests associés :\n" .
@@ -57,4 +57,4 @@ class ApprovalMaintenance
         $className = $parts[1];
         return dirname(dirname($approvedFile)) . '/' . $className . '.php';
     }
-} 
+}

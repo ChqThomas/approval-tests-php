@@ -41,4 +41,4 @@ class EnvironmentAwareNamer implements ApprovalNamer
     {
         return str_replace(['/', '\\', ' '], '_', $name);
     }
-} 
+}

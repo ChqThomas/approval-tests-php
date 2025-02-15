@@ -10,4 +10,4 @@ class CliReporter implements ApprovalReporter
     {
         // Ne rien afficher car PHPUnit gère déjà l'affichage des erreurs
     }
-} 
+}

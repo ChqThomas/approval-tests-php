@@ -6,6 +6,9 @@ composer.lock
 .phpunit.result.cache
 .phpunit.cache/
 
+# PHP CS Fixer
+.php-cs-fixer.cache
+
 # Fichiers received des tests d'approbation
 *.received.*
 
