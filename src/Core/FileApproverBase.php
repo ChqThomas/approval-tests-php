@@ -120,7 +120,7 @@ abstract class FileApproverBase
                 );
             }
 
-            Assert::assertTrue(true); // Marque le test comme ayant une assertion
+            Assert::assertTrue(true);
             unlink($files['received']);
         } catch (\Exception $e) {
             throw $e;
@@ -174,7 +174,23 @@ abstract class FileApproverBase
 
     protected function normalizeText(string $text): string
     {
-        return trim(preg_replace(['/\s+/', '/>\s+</'], [' ', '><'], $text));
+        // Normaliser les fins de ligne
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        
+        // Supprimer les espaces en fin de ligne
+        $lines = explode("\n", $text);
+        $lines = array_map('rtrim', $lines);
+        
+        // Reconstruire le texte
+        $text = implode("\n", $lines);
+        
+        // Supprimer les espaces multiples
+        $text = preg_replace('/\s+/', ' ', $text);
+        
+        // Supprimer les espaces entre les balises
+        $text = preg_replace('/>\s+</', '><', $text);
+        
+        return trim($text);
     }
 
     protected function isBinaryContent(string $content): bool

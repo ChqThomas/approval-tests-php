@@ -11,6 +11,7 @@ use ApprovalTests\Scrubber\JsonScrubber;
 use ApprovalTests\Scrubber\XmlScrubber;
 use ApprovalTests\Combinations\CombinationApprovals;
 use ApprovalTests\Scrubber\CsvScrubber;
+use ApprovalTests\Scrubber\Scrubber;
 
 class Approvals
 {
@@ -29,19 +30,24 @@ class Approvals
         $approver->verify($html, new HtmlScrubber(), $writer);
     }
 
-    public static function verifyJson(string $json): void
+    public static function verifyJson(string $json, ?JsonScrubber $scrubber = null): void
     {
         $approver = new FileApprover();
-        $formattedJson = json_encode(json_decode($json), JSON_PRETTY_PRINT);
-        $writer = new TextWriter($formattedJson, 'json');
-        $approver->verify($formattedJson, new JsonScrubber(), $writer);
+        $scrubber = $scrubber ?? new JsonScrubber();
+        
+        $scrubbedJson = $scrubber->scrub($json);
+        $writer = new TextWriter($scrubbedJson, 'json');
+        $approver->verify($scrubbedJson, $scrubber, $writer);
     }
 
-    public static function verifyXml(string $xml): void
+    public static function verifyXml(string $xml, ?XmlScrubber $scrubber = null): void
     {
         $approver = new FileApprover();
-        $writer = new TextWriter($xml, 'xml');
-        $approver->verify($xml, new XmlScrubber(), $writer);
+        $scrubber = $scrubber ?? new XmlScrubber();
+        
+        $scrubbedXml = $scrubber->scrub($xml);
+        $writer = new TextWriter($scrubbedXml, 'xml');
+        $approver->verify($scrubbedXml, $scrubber, $writer);
     }
 
     public static function verifyFile(string $filePath): void

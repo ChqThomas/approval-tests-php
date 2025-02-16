@@ -2,9 +2,11 @@
 
 namespace ApprovalTests\Scrubber;
 
-class XmlScrubber extends ScrubberBase
+use ApprovalTests\Core\Scrubber;
+
+class XmlScrubber extends AbstractScrubber
 {
-    protected function preProcess(string $content): string
+    public function scrub(string $content): string
     {
         $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
@@ -13,7 +15,14 @@ class XmlScrubber extends ScrubberBase
         // Charger le XML
         @$dom->loadXML($content);
 
-        // Sauvegarder avec la déclaration XML
-        return trim($dom->saveXML());
+        // Récupérer le XML sans la déclaration
+        $xml = $dom->saveXML($dom->documentElement);
+        
+        // Appliquer les scrubbers
+        $xml = $this->scrubGuids($xml);
+        $xml = $this->scrubDates($xml);
+        $xml = $this->applyAdditionalScrubbers($xml);
+
+        return trim($xml);
     }
 }
