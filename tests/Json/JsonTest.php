@@ -8,7 +8,6 @@ use ApprovalTests\Scrubber\JsonScrubber;
 
 class JsonTest extends TestCase
 {
-
     /**
      * @test
      */
@@ -198,4 +197,4 @@ JSON;
         Approvals::verifyJson($json, JsonScrubber::create()
             ->scrubMember('Scrub'));
     }
-} 
+}

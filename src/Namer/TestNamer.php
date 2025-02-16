@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class TestNamer implements ApprovalNamer
 {
-    private string $testClass;
-    private string $testMethod;
+    private ?string $testClass = null;
+    private ?string $testMethod = null;
     private ?string $dataSetName = null;
 
     public function __construct()

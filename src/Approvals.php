@@ -34,7 +34,7 @@ class Approvals
     {
         $approver = new FileApprover();
         $scrubber = $scrubber ?? new JsonScrubber();
-        
+
         $scrubbedJson = $scrubber->scrub($json);
         $writer = new TextWriter($scrubbedJson, 'json');
         $approver->verify($scrubbedJson, $scrubber, $writer);
@@ -44,7 +44,7 @@ class Approvals
     {
         $approver = new FileApprover();
         $scrubber = $scrubber ?? new XmlScrubber();
-        
+
         $scrubbedXml = $scrubber->scrub($xml);
         $writer = new TextWriter($scrubbedXml, 'xml');
         $approver->verify($scrubbedXml, $scrubber, $writer);

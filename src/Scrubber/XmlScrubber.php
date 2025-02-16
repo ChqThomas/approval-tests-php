@@ -17,7 +17,7 @@ class XmlScrubber extends AbstractScrubber
 
         // Récupérer le XML sans la déclaration
         $xml = $dom->saveXML($dom->documentElement);
-        
+
         // Appliquer les scrubbers
         $xml = $this->scrubGuids($xml);
         $xml = $this->scrubDates($xml);

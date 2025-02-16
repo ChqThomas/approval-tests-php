@@ -36,7 +36,7 @@ abstract class AbstractScrubber implements Scrubber
     {
         return preg_replace_callback(
             '/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i',
-            function($matches) {
+            function ($matches) {
                 $guid = $matches[0];
                 if (!isset($this->guidMap[$guid])) {
                     $this->guidMap[$guid] = 'Guid_' . $this->guidCounter++;
@@ -51,7 +51,7 @@ abstract class AbstractScrubber implements Scrubber
     {
         return preg_replace_callback(
             '/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?/',
-            function($matches) {
+            function ($matches) {
                 $date = $matches[0];
                 if (!isset($this->dateMap[$date])) {
                     $this->dateMap[$date] = 'DateTimeOffset_' . $this->dateCounter++;
@@ -90,8 +90,8 @@ abstract class AbstractScrubber implements Scrubber
         }
     }
 
-    public static function create(): static
+    public static function create(): self
     {
         return new static();
     }
-} 
+}

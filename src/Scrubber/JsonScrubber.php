@@ -16,10 +16,10 @@ class JsonScrubber extends AbstractScrubber
 
         // Gérer les membres à ignorer/scrubber
         $this->handleMembers($data);
-        
+
         // Réencoder en JSON
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);
-        
+
         // Appliquer les autres scrubbers (GUIDs, dates, etc.)
         $json = $this->scrubGuids($json);
         $json = $this->scrubDates($json);

@@ -2,25 +2,16 @@
 
 namespace ApprovalTests\Core;
 
-use ApprovalTests\ApprovalException;
 use ApprovalTests\Configuration;
 use ApprovalTests\CustomApprovalException;
 use ApprovalTests\Writer\ApprovalWriter;
 use ApprovalTests\Writer\TextWriter;
-use ApprovalTests\Writer\BinaryWriter;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 abstract class FileApproverBase
 {
-    /** @var string */
-    private $approvedFile;
-
-    /** @var string */
-    private $receivedFile;
-
-    protected function getReporter()
+    protected function getReporter(): ApprovalReporter
     {
         return Configuration::getInstance()->getReporter();
     }
@@ -176,20 +167,20 @@ abstract class FileApproverBase
     {
         // Normaliser les fins de ligne
         $text = str_replace(["\r\n", "\r"], "\n", $text);
-        
+
         // Supprimer les espaces en fin de ligne
         $lines = explode("\n", $text);
         $lines = array_map('rtrim', $lines);
-        
+
         // Reconstruire le texte
         $text = implode("\n", $lines);
-        
+
         // Supprimer les espaces multiples
         $text = preg_replace('/\s+/', ' ', $text);
-        
+
         // Supprimer les espaces entre les balises
         $text = preg_replace('/>\s+</', '><', $text);
-        
+
         return trim($text);
     }
 

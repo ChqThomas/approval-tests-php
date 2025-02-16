@@ -83,7 +83,7 @@ XML;
 XML;
 
         Approvals::verifyXml($xml, XmlScrubber::create()
-            ->addScrubber(fn($content) => str_replace('value', 'replaced', $content)));
+            ->addScrubber(fn ($content) => str_replace('value', 'replaced', $content)));
     }
 
     /**
@@ -109,7 +109,7 @@ XML;
 XML;
 
         Approvals::verifyXml($xml, XmlScrubber::create()
-            ->addScrubber(fn($content) => str_replace('value', 'replaced', $content)));
+            ->addScrubber(fn ($content) => str_replace('value', 'replaced', $content)));
     }
 
     /**
@@ -135,7 +135,7 @@ XML;
 XML;
 
         Approvals::verifyXml($xml, XmlScrubber::create()
-            ->addScrubber(fn($content) => str_replace('value', 'replaced', $content)));
+            ->addScrubber(fn ($content) => str_replace('value', 'replaced', $content)));
     }
 
     /**
@@ -181,4 +181,4 @@ XML;
 XML;
         Approvals::verifyXml($xml);
     }
-} 
+}
