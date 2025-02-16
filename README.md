@@ -2,10 +2,13 @@
 
 A PHP library for approval testing. This approach allows you to verify complex results by comparing them with approved versions.
 
+> [!WARNING]  
+> This library is still in development. It is not recommended for production use. A lot of features are still missing, and the API may change.
+
 ## Installation
 
 ```bash
-composer require approval-tests/approval-tests
+composer require chqthomas/approval-tests
 ```
 
 ## Basic Usage
@@ -206,6 +209,52 @@ XML;
 }
 ```
 
+## Regex Scrubbing
+
+`RegexScrubber` allows you to normalize content using regular expressions before comparison. This is particularly useful for replacing values that may change, such as identifiers or names.
+
+### Example of Regex Scrubbing
+
+```php
+public function testRegexScrubbing(): void 
+{
+    $json = <<<JSON
+{
+  "nodes": [
+    {"id": "ABC123", "name": "Node1"},
+    {"id": "DEF456", "name": "Node2"},
+    {"id": "GHI789", "name": "Node3"}
+  ]
+}
+JSON;
+
+    Approvals::verifyJson($json, JsonScrubber::create()
+        ->addScrubber(RegexScrubber::create(['/"id": "([A-Z]{3}\d{3})"/' => '"id": "MATCHED"'])));
+}
+```
+
+### Example of Multiple Regex Scrubbing
+
+```php
+public function testMultipleRegexScrubbing(): void 
+{
+    $json = <<<JSON
+{
+  "users": [
+    {"username": "user123", "fullName": "John Doe"},
+    {"username": "user456", "fullName": "Jane Smith"}
+  ]
+}
+JSON;
+
+    Approvals::verifyJson($json, JsonScrubber::create()
+        ->addScrubber(RegexScrubber::create([
+            '/user\d{3}/' => 'userXXX',
+            '/[A-Z][a-z]+ [A-Z][a-z]+/' => 'PERSON_NAME'
+        ])));
+}
+``` 
+
 ### Generic Custom Scrubber
 
 For any type of content, you can create a custom scrubber:
@@ -315,49 +364,3 @@ Contributions are welcome! Feel free to:
 ## License
 
 MIT License
-
-## Regex Scrubbing
-
-`RegexScrubber` allows you to normalize content using regular expressions before comparison. This is particularly useful for replacing values that may change, such as identifiers or names.
-
-### Example of Regex Scrubbing
-
-```php
-public function testRegexScrubbing(): void 
-{
-    $json = <<<JSON
-{
-  "nodes": [
-    {"id": "ABC123", "name": "Node1"},
-    {"id": "DEF456", "name": "Node2"},
-    {"id": "GHI789", "name": "Node3"}
-  ]
-}
-JSON;
-
-    Approvals::verifyJson($json, JsonScrubber::create()
-        ->addScrubber(RegexScrubber::create(['/"id": "([A-Z]{3}\d{3})"/' => '"id": "MATCHED"'])));
-}
-```
-
-### Example of Multiple Regex Scrubbing
-
-```php
-public function testMultipleRegexScrubbing(): void 
-{
-    $json = <<<JSON
-{
-  "users": [
-    {"username": "user123", "fullName": "John Doe"},
-    {"username": "user456", "fullName": "Jane Smith"}
-  ]
-}
-JSON;
-
-    Approvals::verifyJson($json, JsonScrubber::create()
-        ->addScrubber(RegexScrubber::create([
-            '/user\d{3}/' => 'userXXX',
-            '/[A-Z][a-z]+ [A-Z][a-z]+/' => 'PERSON_NAME'
-        ])));
-}
-``` 
