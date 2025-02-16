@@ -54,7 +54,7 @@ class DiffReporter implements ReporterInterface
         }
 
         //        throw new \RuntimeException(
-        //            "Aucun outil de diff n'a été trouvé. Veuillez installer l'un des outils suivants : " .
+        //            "No diff tool found. Please install one of the following tools: " .
         //            implode(', ', array_keys($this->diffTools))
         //        );
     }
@@ -78,7 +78,7 @@ class DiffReporter implements ReporterInterface
             return file_exists($baseCommand);
         }
 
-        // Pour Linux/Mac, vérifie si la commande existe dans le PATH
+        // For Linux/Mac, check if the command exists in the PATH
         $whichCommand = "which " . escapeshellarg($baseCommand);
         exec($whichCommand, $output, $returnVar);
 

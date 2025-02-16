@@ -12,13 +12,13 @@ class XmlScrubber extends AbstractScrubber
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
 
-        // Charger le XML
+        // Load XML
         @$dom->loadXML($content);
 
-        // Récupérer le XML sans la déclaration
+        // Get XML without declaration
         $xml = $dom->saveXML($dom->documentElement);
 
-        // Appliquer les scrubbers
+        // Apply scrubbers
         $xml = $this->scrubGuids($xml);
         $xml = $this->scrubDates($xml);
         $xml = $this->applyAdditionalScrubbers($xml);

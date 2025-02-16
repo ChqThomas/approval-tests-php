@@ -20,15 +20,15 @@ abstract class FileApproverBase
 
     protected function normalizeLineEndings(string $text): string
     {
-        // Convertit tous les \r\n et \r en \n
+        // Convert all \r\n and \r to \n
         $text = str_replace(["\r\n", "\r"], "\n", $text);
 
-        // Supprime les espaces en fin de ligne
+        // Remove trailing spaces
         $lines = explode("\n", $text);
         $lines = array_map('rtrim', $lines);
         $text = implode("\n", $lines);
 
-        // Supprime les lignes vides à la fin
+        // Remove empty lines at the end
         return rtrim($text);
     }
 
@@ -74,10 +74,15 @@ abstract class FileApproverBase
 
     protected function handleNewTest(array $files): void
     {
+        if (getenv('APPROVE_SNAPSHOTS') === 'true') {
+            copy($files['received'], $files['approved']);
+            return;
+        }
+
         file_put_contents($files['approved'], '');
         $this->getReporter()->report($files['received'], $files['approved']);
         throw new CustomApprovalException(
-            "Nouveau test : veuillez vérifier le fichier received et le copier dans approved s'il est correct.\n",
+            "New test: please verify the received file and copy it to approved if correct.\n",
             $files['approved'],
             $files['received']
         );
@@ -125,7 +130,6 @@ abstract class FileApproverBase
         string $approvedText,
         string $receivedText
     ): void {
-        $messageType = $isBinary ? 'binaire' : '';
         $message = sprintf(
             "Received: %s\n" .
             "Approved: %s",
@@ -151,34 +155,34 @@ abstract class FileApproverBase
 
     protected function formatTextForDiff(string $text): string
     {
-        // Convertir tous les CRLF et CR en LF
+        // Convert all CRLF and CR to LF
         $text = str_replace(["\r\n", "\r"], "\n", $text);
 
-        // Supprimer les espaces en fin de ligne
+        // Remove trailing spaces
         $lines = explode("\n", $text);
         $lines = array_map('rtrim', $lines);
         $text = implode("\n", $lines);
 
-        // S'assurer que le texte se termine par une nouvelle ligne
+        // Ensure text ends with a newline
         return rtrim($text) . "\n";
     }
 
     protected function normalizeText(string $text): string
     {
-        // Normaliser les fins de ligne
+        // Normalize line endings
         $text = str_replace(["\r\n", "\r"], "\n", $text);
 
-        // Supprimer les espaces en fin de ligne
+        // Remove trailing spaces
         $lines = explode("\n", $text);
         $lines = array_map('rtrim', $lines);
 
-        // Reconstruire le texte
+        // Rebuild text
         $text = implode("\n", $lines);
 
-        // Supprimer les espaces multiples
+        // Remove multiple spaces
         $text = preg_replace('/\s+/', ' ', $text);
 
-        // Supprimer les espaces entre les balises
+        // Remove spaces between tags
         $text = preg_replace('/>\s+</', '><', $text);
 
         return trim($text);
@@ -186,7 +190,7 @@ abstract class FileApproverBase
 
     protected function isBinaryContent(string $content): bool
     {
-        // Vérifie si le contenu contient des caractères non imprimables
+        // Check if content contains non-printable characters
         return preg_match('/[^\x20-\x7E\t\r\n]/', $content) === 1;
     }
 }

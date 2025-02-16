@@ -22,11 +22,11 @@ class TestNamer implements ApprovalNamer
                 $this->testClass = get_class($testCase);
                 $this->testMethod = $item['function'];
 
-                // Récupérer le nom du dataset via la méthode toString()
+                // Get the dataset name via the toString() method
                 $testName = $testCase->toString();
 
-                // Le format est généralement: "testMethod with data set #0 (arg1, arg2)"
-                // ou "testMethod with data set "name" (arg1, arg2)"
+                // The format is generally: "testMethod with data set #0 (arg1, arg2)"
+                // or "testMethod with data set "name" (arg1, arg2)"
                 if (preg_match('/with data set [#"]([^")]+)/', $testName, $matches)) {
                     $this->dataSetName = $matches[1];
                 }
@@ -35,7 +35,7 @@ class TestNamer implements ApprovalNamer
         }
 
         if (!$this->testClass || !$this->testMethod) {
-            throw new ApprovalException("Impossible de déterminer le contexte du test");
+            throw new ApprovalException("Unable to determine the test context");
         }
     }
 
@@ -73,7 +73,7 @@ class TestNamer implements ApprovalNamer
 
     private function sanitizeDataSetName(string $name): string
     {
-        // Remplace les caractères non autorisés dans les noms de fichiers
+        // Replace invalid characters in file names
         return preg_replace('/[^a-zA-Z0-9._-]/', '_', $name);
     }
 }

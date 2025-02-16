@@ -5,7 +5,7 @@ namespace ApprovalTests;
 class ApprovalMaintenance
 {
     /**
-     * Supprime tous les fichiers .received qui n'ont pas de tests en échec associés
+     * Delete all .received files that do not have associated failed tests
      */
     public static function cleanUpReceivedFiles(string $directory): void
     {
@@ -13,7 +13,7 @@ class ApprovalMaintenance
         foreach ($receivedFiles as $receivedFile) {
             $approvedFile = str_replace('.received.', '.approved.', $receivedFile);
 
-            // Si le fichier approved existe et est identique, on peut supprimer le received
+            // If the approved file exists and is identical, we can delete the received file
             if (file_exists($approvedFile) &&
                 file_get_contents($receivedFile) === file_get_contents($approvedFile)) {
                 unlink($receivedFile);
@@ -22,7 +22,7 @@ class ApprovalMaintenance
     }
 
     /**
-     * Vérifie s'il y a des fichiers .approved orphelins (sans test associé)
+     * Check if there are orphaned .approved files (without associated test)
      */
     public static function findOrphanedApprovedFiles(string $testsDirectory): array
     {
@@ -30,12 +30,12 @@ class ApprovalMaintenance
         $approvedFiles = glob($testsDirectory . '/**/*.approved.*', GLOB_NOSORT);
 
         foreach ($approvedFiles as $approvedFile) {
-            // Extrait le nom du test à partir du nom du fichier
+            // Extract the test name from the file name
             if (preg_match('/Tests\.(\w+)Test\.(\w+)\.approved/', $approvedFile, $matches)) {
                 $testClass = $matches[1] . 'Test';
                 $testMethod = $matches[2];
 
-                // Vérifie si la classe et la méthode de test existent
+                // Check if the test class and method exist
                 $testFile = $testsDirectory . '/' . $testClass . '.php';
                 if (!file_exists($testFile) ||
                     !self::methodExistsInFile($testFile, $testMethod)) {

@@ -8,6 +8,6 @@ class CliReporter implements ApprovalReporter
 {
     public function report(string $receivedFile, string $approvedFile): void
     {
-        // Ne rien afficher car PHPUnit gère déjà l'affichage des erreurs
+        // Do nothing as PHPUnit already handles error display
     }
 }

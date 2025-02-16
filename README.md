@@ -1,6 +1,6 @@
 # PHP Approval Tests
 
-Une librairie PHP pour les tests d'approbation (approval testing). Cette approche permet de vérifier des résultats complexes en les comparant avec des versions approuvées.
+A PHP library for approval testing. This approach allows you to verify complex results by comparing them with approved versions.
 
 ## Installation
 
@@ -8,9 +8,9 @@ Une librairie PHP pour les tests d'approbation (approval testing). Cette approch
 composer require approval-tests/approval-tests
 ```
 
-## Utilisation de base
+## Basic Usage
 
-### Test simple
+### Simple Test
 ```php
 use ApprovalTests\Approvals;
 
@@ -20,7 +20,7 @@ public function testSimpleString(): void
 }
 ```
 
-### Test avec données structurées
+### Structured Data Test
 ```php
 public function testArray(): void 
 {
@@ -33,7 +33,7 @@ public function testArray(): void
 }
 ```
 
-## Types de vérifications spécialisées
+## Specialized Verifications
 
 ### HTML
 ```php
@@ -49,7 +49,7 @@ public function testHtml(): void
 public function testJson(): void 
 {
     $json = '{"name":"John","age":30}';
-    Approvals::verifyJson($json); // Formaté automatiquement
+    Approvals::verifyJson($json); // Automatically formatted
 }
 ```
 
@@ -71,7 +71,7 @@ public function testCsv(): void
 }
 ```
 
-### Fichiers binaires
+### Binary Files
 ```php
 public function testBinaryFile(): void 
 {
@@ -79,9 +79,9 @@ public function testBinaryFile(): void
 }
 ```
 
-## Fonctionnalités avancées
+## Advanced Features
 
-### Tests avec data providers
+### Tests with Data Providers
 ```php
 /**
  * @dataProvider provideTestData
@@ -93,7 +93,7 @@ public function testWithDataProvider(array $data, string $expected): void
 }
 ```
 
-### Vérification de toutes les combinaisons
+### Verify All Combinations
 ```php
 public function testAllCombinations(): void 
 {
@@ -114,89 +114,182 @@ public function testAllCombinations(): void
 }
 ```
 
-### Tests spécifiques à l'environnement
+### Environment-Specific Tests
 ```php
 public function testEnvironmentSpecific(): void 
 {
     Approvals::verifyWithEnvironment(
-        "Contenu spécifique à Windows",
+        "Windows-specific content",
         "Windows_10_Pro"
     );
 }
 ```
 
-## Scrubbers (Nettoyeurs)
+## Scrubbers
 
-Les scrubbers permettent de normaliser le contenu avant la comparaison.
+Scrubbers allow you to normalize content before comparison.
 
-### DateScrubber
+### JSON Scrubbing
+
 ```php
-public function testWithDates(): void 
+public function testJsonScrubbing(): void 
 {
-    $content = "Date: 2024-01-01\nID: 12345";
+    $json = <<<JSON
+{
+    "user": "John",
+    "password": "secret123",
+    "timestamp": "2024-01-01T12:00:00",
+    "id": "550e8400-e29b-41d4-a716-446655440000"
+}
+JSON;
+
+    // Default scrubbers automatically handle:
+    // - GUIDs (replaced with Guid_1, Guid_2, etc.)
+    // - Dates (replaced with DateTimeOffset_1, etc.)
+    Approvals::verifyJson($json);
+}
+```
+
+#### Ignore JSON Members
+```php
+public function testJsonIgnoreMember(): void 
+{
+    $json = <<<JSON
+{
+    "user": "John",
+    "sensitive": {
+        "password": "secret123",
+        "token": "abc123"
+    }
+}
+JSON;
+
+    Approvals::verifyJson($json, JsonScrubber::create()
+        ->ignoreMember('sensitive')); // Member will be removed
+}
+```
+
+#### Scrub JSON Members
+```php
+public function testJsonScrubMember(): void 
+{
+    $json = <<<JSON
+{
+    "user": "John",
+    "password": "secret123",
+    "api_key": "xyz789"
+}
+JSON;
+
+    Approvals::verifyJson($json, JsonScrubber::create()
+        ->scrubMember('password', 'api_key')); // Members will be replaced with "[scrubbed]"
+}
+```
+
+### XML Scrubbing
+
+```php
+public function testXmlScrubbing(): void 
+{
+    $xml = <<<XML
+<?xml version="1.0"?>
+<user>
+    <name>John</name>
+    <created>2024-01-01T12:00:00</created>
+    <id>550e8400-e29b-41d4-a716-446655440000</id>
+</user>
+XML;
+
+    // Custom scrubber for XML
+    Approvals::verifyXml($xml, XmlScrubber::create()
+        ->addScrubber(fn($content) => preg_replace('/John/', '[NAME]', $content)));
+}
+```
+
+### Generic Custom Scrubber
+
+For any type of content, you can create a custom scrubber:
+
+```php
+class MyScrubber extends AbstractScrubber
+{
+    public function scrub(string $content): string
+    {
+        // Apply base scrubbers first (GUIDs, dates)
+        $content = $this->scrubGuids($content);
+        $content = $this->scrubDates($content);
+        
+        // Add your custom rules
+        $content = preg_replace('/secret-\d+/', '[SECRET]', $content);
+        
+        // Apply additional scrubbers
+        return $this->applyAdditionalScrubbers($content);
+    }
+}
+
+// Usage
+public function testWithCustomScrubber(): void 
+{
+    $content = "ID: secret-123\nDate: 2024-01-01";
+    
     Approvals::verifyWithExtension(
         $content,
-        "log",
-        new DateScrubber()
+        "txt",
+        MyScrubber::create()
+            ->addScrubber(fn($text) => str_replace('ID:', 'Reference:', $text))
     );
 }
 ```
 
-### Scrubber personnalisé
-```php
-public function testWithCustomScrubber(): void 
-{
-    Approvals::verifyWithExtension(
-        $content,
-        "txt",
-        function($text) {
-            return preg_replace('/ID: \d+/', 'ID: XXXXX', $text);
-        }
-    );
-}
+### Auto-accepting Snapshots
+
+To automatically accept new snapshots or changes:
+
+```bash
+APPROVE_SNAPSHOTS=true vendor/bin/phpunit
 ```
 
 ## Maintenance
 
-### Nettoyage des fichiers received
+### Cleanup Received Files
 ```php
 use ApprovalTests\ApprovalMaintenance;
 
-// Supprime les fichiers .received qui correspondent aux .approved
+// Delete .received files that match .approved files
 ApprovalMaintenance::cleanUpReceivedFiles(__DIR__ . '/tests/approvals');
 ```
 
-### Détection des fichiers orphelins
+### Detect Orphaned Files
 ```php
-// Trouve les fichiers .approved sans test associé
+// Find .approved files without associated tests
 $orphanedFiles = ApprovalMaintenance::findOrphanedApprovedFiles(__DIR__ . '/tests');
 ```
 
 ## Reporters
 
-Les reporters définissent comment les différences sont rapportées.
+Reporters define how differences are reported.
 
-### Reporter CLI
+### CLI Reporter
 ```php
 use ApprovalTests\Reporter\CliReporter;
 
-// Configuration par défaut
+// Default configuration
 Configuration::getInstance()->setReporter(new CliReporter());
 ```
 
-### Reporter de différences
+### Diff Reporter
 ```php
 use ApprovalTests\Reporter\DiffReporter;
 
-// Affiche les différences en utilisant diff
+// Show differences using diff
 Configuration::getInstance()->setReporter(new DiffReporter());
 ```
 
-### Reporter composite
+### Composite Reporter
 ```php
 use ApprovalTests\Reporter\CompositeReporter;
 
-// Combine plusieurs reporters
+// Combine multiple reporters
 $reporter = new CompositeReporter([
     new CliReporter(),
     new DiffReporter()
@@ -204,21 +297,21 @@ $reporter = new CompositeReporter([
 Configuration::getInstance()->setReporter($reporter);
 ```
 
-## Bonnes pratiques
+## Best Practices
 
-1. Stockez les fichiers approved dans le contrôle de version
-2. Utilisez des scrubbers pour les données variables (dates, IDs, etc.)
-3. Nettoyez régulièrement les fichiers received
-4. Vérifiez les fichiers approved orphelins
-5. Utilisez des noms de tests descriptifs
+1. Store approved files in version control
+2. Use scrubbers for variable data (dates, IDs, etc.)
+3. Regularly clean up received files
+4. Check for orphaned approved files
+5. Use descriptive test names
 
-## Contribution
+## Contributing
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-1. Forker le projet
-2. Créer une branche pour votre fonctionnalité
-3. Soumettre une pull request
+Contributions are welcome! Feel free to:
+1. Fork the project
+2. Create a feature branch
+3. Submit a pull request
 
-## Licence
+## License
 
 MIT License 

@@ -11,7 +11,7 @@ class ApprovalMaintenance
 
         if (!empty($abandonedFiles)) {
             throw new \RuntimeException(
-                "Les fichiers approved suivants n'ont plus de tests associés :\n" .
+                "The following approved files have no associated tests:\n" .
                 implode("\n", $abandonedFiles)
             );
         }
@@ -51,7 +51,7 @@ class ApprovalMaintenance
 
     private static function getAssociatedTestFile(string $approvedFile): string
     {
-        // Exemple: tests/approvals/Tests.ExampleTest.testMethod.approved.txt
+        // Example: tests/approvals/Tests.ExampleTest.testMethod.approved.txt
         // -> tests/ExampleTest.php
         $parts = explode('.', basename($approvedFile));
         $className = $parts[1];

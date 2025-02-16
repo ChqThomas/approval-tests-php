@@ -6,13 +6,13 @@ class CsvScrubber extends ScrubberBase
 {
     protected function preProcess(string $content): string
     {
-        // Normaliser les fins de ligne
+        // Normalize line endings
         $content = str_replace(["\r\n", "\r"], "\n", $content);
 
-        // Séparer en lignes
+        // Split into lines
         $lines = explode("\n", $content);
 
-        // Nettoyer chaque ligne
+        // Clean each line
         $lines = array_map(function ($line) {
             return trim($line);
         }, $lines);
