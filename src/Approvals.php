@@ -11,7 +11,6 @@ use ApprovalTests\Scrubber\JsonScrubber;
 use ApprovalTests\Scrubber\XmlScrubber;
 use ApprovalTests\Combinations\CombinationApprovals;
 use ApprovalTests\Scrubber\CsvScrubber;
-use ApprovalTests\Scrubber\Scrubber;
 
 class Approvals
 {

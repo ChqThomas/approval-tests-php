@@ -10,11 +10,15 @@ abstract class AbstractScrubber implements Scrubber
     protected int $dateCounter = 1;
     protected array $dateMap = [];
     protected array $guidMap = [];
+    /** @var array<callable|Scrubber> */
     protected array $additionalScrubbers = [];
     protected array $ignoredMembers = [];
     protected array $scrubbedMembers = [];
 
-    public function addScrubber(callable $scrubber): self
+    /**
+     * @param callable|Scrubber $scrubber
+     */
+    public function addScrubber($scrubber): self
     {
         $this->additionalScrubbers[] = $scrubber;
         return $this;
@@ -65,7 +69,11 @@ abstract class AbstractScrubber implements Scrubber
     protected function applyAdditionalScrubbers(string $content): string
     {
         foreach ($this->additionalScrubbers as $scrubber) {
-            $content = $scrubber($content);
+            if ($scrubber instanceof Scrubber) {
+                $content = $scrubber->scrub($content);
+            } else {
+                $content = $scrubber($content);
+            }
         }
         return $content;
     }
@@ -90,6 +98,9 @@ abstract class AbstractScrubber implements Scrubber
         }
     }
 
+    /**
+     * @return static
+     */
     public static function create(): self
     {
         return new static();

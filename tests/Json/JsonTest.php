@@ -5,6 +5,7 @@ namespace Tests\Json;
 use ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
 use ApprovalTests\Scrubber\JsonScrubber;
+use ApprovalTests\Scrubber\RegexScrubber;
 
 class JsonTest extends TestCase
 {
@@ -196,5 +197,45 @@ JSON;
 
         Approvals::verifyJson($json, JsonScrubber::create()
             ->scrubMember('Scrub'));
+    }
+
+    /**
+     * @test
+     */
+    public function regexScrubbing(): void
+    {
+        $json = <<<JSON
+{
+  "nodes": [
+    {"id": "ABC123", "name": "Node1"},
+    {"id": "DEF456", "name": "Node2"},
+    {"id": "GHI789", "name": "Node3"}
+  ]
+}
+JSON;
+
+        Approvals::verifyJson($json, JsonScrubber::create()
+            ->addScrubber(RegexScrubber::create(['/"id": "([A-Z]{3}\d{3})"/' => '"id": "MATCHED"'])));
+    }
+
+    /**
+     * @test
+     */
+    public function multipleRegexScrubbing(): void
+    {
+        $json = <<<JSON
+{
+  "users": [
+    {"username": "user123", "fullName": "John Doe"},
+    {"username": "user456", "fullName": "Jane Smith"}
+  ]
+}
+JSON;
+
+        Approvals::verifyJson($json, JsonScrubber::create()
+            ->addScrubber(RegexScrubber::create([
+                '/user\d{3}/' => 'userXXX',
+                '/[A-Z][a-z]+ [A-Z][a-z]+/' => 'PERSON_NAME'
+            ])));
     }
 }

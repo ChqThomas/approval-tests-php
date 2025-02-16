@@ -3,6 +3,7 @@
 namespace Tests\Xml;
 
 use ApprovalTests\Approvals;
+use ApprovalTests\Scrubber\RegexScrubber;
 use ApprovalTests\Scrubber\XmlScrubber;
 use PHPUnit\Framework\TestCase;
 
@@ -180,5 +181,43 @@ XML;
 </body>
 XML;
         Approvals::verifyXml($xml);
+    }
+
+    /**
+     * @test
+     */
+    public function regexScrubbing(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+  <node>ABC123</node>
+  <node>DEF456</node>
+  <node>GHI789</node>
+</body>
+XML;
+
+        Approvals::verifyXml($xml, XmlScrubber::create()
+            ->addScrubber(RegexScrubber::create(['/[A-Z]{3}\d{3}/' => 'MATCHED'])));
+    }
+
+    /**
+     * @test
+     */
+    public function multipleRegexScrubbing(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+  <node id="user123">John Doe</node>
+  <node id="user456">Jane Smith</node>
+</body>
+XML;
+
+        Approvals::verifyXml($xml, XmlScrubber::create()
+            ->addScrubber(RegexScrubber::create([
+                '/user\d{3}/' => 'userXXX',
+                '/[A-Z][a-z]+ [A-Z][a-z]+/' => 'PERSON_NAME'
+            ])));
     }
 }
