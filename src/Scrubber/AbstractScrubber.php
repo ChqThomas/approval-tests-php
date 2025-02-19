@@ -71,7 +71,7 @@ abstract class AbstractScrubber implements Scrubber
         foreach ($this->additionalScrubbers as $scrubber) {
             if ($scrubber instanceof Scrubber) {
                 $content = $scrubber->scrub($content);
-            } else {
+            } elseif (\is_callable($scrubber)) {
                 $content = $scrubber($content);
             }
         }

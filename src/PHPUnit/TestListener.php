@@ -10,7 +10,7 @@ use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener as PHPUnitTestListener;
 use PHPUnit\Framework\Warning;
 
-class TestListener implements PHPUnitTestListener
+class TestListener extends AbstractApprovalTestHandler implements PHPUnitTestListener
 {
     public function addError(Test $test, \Throwable $t, float $time): void
     {
@@ -22,23 +22,20 @@ class TestListener implements PHPUnitTestListener
         $this->handleApprovalException($e);
     }
 
-    private function handleApprovalException(\Throwable $throwable): void
+    protected function handleApprovalException(\Throwable $throwable): void
     {
         $exception = $throwable;
 
-        // Extraire l'exception d'origine si elle est enveloppée
         if ($throwable instanceof ExceptionWrapper) {
             $exception = $throwable->getOriginalException() ?? $throwable;
         }
 
-        // Vérifier si c'est une erreur d'approbation en vérifiant le message
         if ($exception instanceof CustomApprovalException) {
-            $reporter = new DiffReporter();
-            $reporter->report($exception->getApprovedFile(), $exception->getReceivedFile());
+            $this->openDiffReporter($exception);
         }
     }
 
-    // Méthodes requises par l'interface mais non utilisées
+    // Required by interface
     public function addWarning(Test $test, Warning $e, float $time): void
     {
     }

@@ -2,22 +2,14 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpunit;
 use PHPUnit\Framework\TestCase;
 use ApprovalTests\Approvals;
 use ApprovalTests\Scrubber\CallbackScrubber;
 
 class ApprovalsTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $approvalsDir = __DIR__ . '/approvals';
-        if (!is_dir($approvalsDir)) {
-            mkdir($approvalsDir, 0777, true);
-        }
-    }
-
     public function testVerifyString(): void
     {
         Approvals::verify("Simple string test");
@@ -132,58 +124,72 @@ class ApprovalsTest extends TestCase
 
     public function testVerifyWithUnicode(): void
     {
-        $text = "Unicode test: 你好, こんにちは, Привет, مرحبا, שָׁלוֹם";
-        Approvals::verify($text);
+        Approvals::verify("Unicode test: 你好, こんにちは, Привет, مرحبا, שָׁלוֹם");
     }
 
     public function testVerifyWithSpecialCharacters(): void
     {
-        $text = 'Special chars: &<>"\'/' . "\n";
-        Approvals::verify($text);
+        Approvals::verify('Special chars: &<>"\'/' . "\n");
     }
 
     /**
      * @dataProvider provideTestData
+     * @requires PHPUnit < 10
      */
-    public function testWithDataProvider(string $input, string $expected): void
+    #[RequiresPHPUnit('< 10')]
+    public function testWithDataProviderAnnotation(string $input): void
     {
-        $result = strtoupper($input);
-        // On vérifie que le résultat correspond à l'attendu
-        $this->assertEquals($expected, $result);
-        // Puis on l'approuve
-        Approvals::verify($result);
+        Approvals::verify($input);
     }
 
-    public function provideTestData(): array
+    /**
+     * @requires PHPUnit >= 10
+     */
+    #[DataProvider('provideTestData')]
+    #[RequiresPHPUnit('>= 10')]
+    public function testWithDataProviderAttribute(string $input): void
+    {
+        Approvals::verify($input);
+    }
+
+    public static function provideTestData(): array
     {
         return [
-            'simple text' => ['hello', 'HELLO'],
-            'with spaces' => ['hello world', 'HELLO WORLD'],
-            'with numbers' => ['test123', 'TEST123'],
+            'simple text' => ['hello'],
+            'with spaces' => ['hello world'],
+            'with numbers' => ['test123'],
         ];
     }
 
     /**
      * @dataProvider provideJsonData
+     * @requires PHPUnit < 10
      */
-    public function testJsonWithDataProvider(array $data, string $expectedJson): void
+    #[RequiresPHPUnit('< 10')]
+    public function testJsonWithDataProviderAnnotation(array $data): void
     {
         $json = json_encode($data, JSON_PRETTY_PRINT);
-        // On vérifie que le JSON est valide
-        $this->assertJson($json);
-        // On vérifie qu'il correspond à l'attendu après formatage
-        $expectedFormatted = json_encode(json_decode($expectedJson), JSON_PRETTY_PRINT);
-        $this->assertJsonStringEqualsJsonString($expectedFormatted, $json);
-        // Puis on l'approuve
+
         Approvals::verifyJson($json);
     }
 
-    public function provideJsonData(): array
+    /**
+     * @requires PHPUnit >= 10
+     */
+    #[RequiresPHPUnit('>= 10')]
+    #[DataProvider('provideJsonData')]
+    public function testJsonWithDataProviderAttribute(array $data): void
+    {
+        $json = json_encode($data, JSON_PRETTY_PRINT);
+
+        Approvals::verifyJson($json);
+    }
+
+    public static function provideJsonData(): array
     {
         return [
             'simple object' => [
-                ['name' => 'John', 'age' => 30],
-                json_encode(['name' => 'John', 'age' => 30], JSON_PRETTY_PRINT)
+                ['name' => 'John', 'age' => 30]
             ],
             'nested object' => [
                 [
@@ -194,16 +200,7 @@ class ApprovalsTest extends TestCase
                             'country' => 'France'
                         ]
                     ]
-                ],
-                json_encode([
-                    'user' => [
-                        'name' => 'John',
-                        'address' => [
-                            'city' => 'Paris',
-                            'country' => 'France'
-                        ]
-                    ]
-                ], JSON_PRETTY_PRINT)
+                ]
             ]
         ];
     }

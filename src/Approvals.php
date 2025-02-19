@@ -22,11 +22,14 @@ class Approvals
         $approver->verify($text, null, $writer);
     }
 
-    public static function verifyHtml(string $html): void
+    public static function verifyHtml(string $html, ?HtmlScrubber $scrubber = null): void
     {
         $approver = new FileApprover();
-        $writer = new TextWriter($html, 'html');
-        $approver->verify($html, new HtmlScrubber(), $writer);
+        $scrubber = $scrubber ?? new HtmlScrubber();
+
+        $scrubbedHtml = $scrubber->scrub($html);
+        $writer = new TextWriter($scrubbedHtml, 'html');
+        $approver->verify($scrubbedHtml, $scrubber, $writer);
     }
 
     public static function verifyJson(string $json, ?JsonScrubber $scrubber = null): void

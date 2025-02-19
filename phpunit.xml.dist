@@ -3,12 +3,16 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true">
-    <listeners>
-        <listener class="ApprovalTests\PHPUnit\TestListener"/>
-    </listeners>
     <testsuites>
         <testsuite name="ApprovalTests Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-</phpunit> 
+    <listeners>
+        <listener class="ApprovalTests\PHPUnit\TestListener"/>
+    </listeners>
+<!--    <extensions>-->
+<!--        <bootstrap class="ApprovalTests\PHPUnit\ApprovalTestExtensiona">-->
+<!--        </bootstrap>-->
+<!--    </extensions>-->
+</phpunit>

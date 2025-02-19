@@ -16,18 +16,13 @@ class XmlTest extends TestCase
 </body>
 XML;
 
-    /**
-     * @test
-     */
-    public function xml(): void
+    public function testXml(): void
     {
         Approvals::verifyXml($this->xml);
     }
 
-    /**
-     * @test
-     */
-    public function noDeclaration(): void
+
+    public function testNoDeclaration(): void
     {
         $xml = <<<XML
 <body>
@@ -37,10 +32,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function comment(): void
+    public function testComment(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -49,10 +41,8 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function commentWithScrub(): void
+
+    public function testCommentWithScrub(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -61,10 +51,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function commentMix(): void
+    public function testCommentMix(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -73,10 +60,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function commentMixWithScrub(): void
+    public function testCommentMixWithScrub(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -87,10 +71,7 @@ XML;
             ->addScrubber(fn ($content) => str_replace('value', 'replaced', $content)));
     }
 
-    /**
-     * @test
-     */
-    public function cdata(): void
+    public function testCdata(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -99,10 +80,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function cdataWithScrub(): void
+    public function testCdataWithScrub(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -113,10 +91,7 @@ XML;
             ->addScrubber(fn ($content) => str_replace('value', 'replaced', $content)));
     }
 
-    /**
-     * @test
-     */
-    public function cdataMix(): void
+    public function testCdataMix(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -125,10 +100,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function cdataMixWithScrub(): void
+    public function testCdataMixWithScrub(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -139,10 +111,7 @@ XML;
             ->addScrubber(fn ($content) => str_replace('value', 'replaced', $content)));
     }
 
-    /**
-     * @test
-     */
-    public function scrubbing(): void
+    public function testScrubbing(): void
     {
         $date = date('Y-m-d\TH:i:s.u\Z');
         $xml = <<<XML
@@ -154,10 +123,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function emptyTag(): void
+    public function testEmptyTag(): void
     {
         $xml = <<<XML
 <body>
@@ -168,10 +134,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function emptyTagWithAttributes(): void
+    public function testEmptyTagWithAttributes(): void
     {
         $guid = '550e8400-e29b-41d4-a716-446655440000';
         $xml = <<<XML
@@ -183,10 +146,7 @@ XML;
         Approvals::verifyXml($xml);
     }
 
-    /**
-     * @test
-     */
-    public function regexScrubbing(): void
+    public function testRegexScrubbing(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -204,7 +164,7 @@ XML;
     /**
      * @test
      */
-    public function multipleRegexScrubbing(): void
+    public function testMultipleRegexScrubbing(): void
     {
         $xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>

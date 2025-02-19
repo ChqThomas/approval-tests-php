@@ -9,10 +9,7 @@ use ApprovalTests\Scrubber\RegexScrubber;
 
 class JsonTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function jObjectOrdering1(): void
+    public function testJObjectOrdering1(): void
     {
         $json = json_encode([
             '@xmlns' => 2,
@@ -22,10 +19,7 @@ class JsonTest extends TestCase
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function jObjectOrdering2(): void
+    public function testJObjectOrdering2(): void
     {
         $json = json_encode([
             '#text' => 1,
@@ -35,10 +29,7 @@ class JsonTest extends TestCase
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function jTokenIgnore(): void
+    public function testJTokenIgnore(): void
     {
         $json = <<<JSON
 {
@@ -58,10 +49,7 @@ JSON;
             ->ignoreMember('Ignore', 'Memory Info'));
     }
 
-    /**
-     * @test
-     */
-    public function jTokenScrub(): void
+    public function testJTokenScrub(): void
     {
         $json = <<<JSON
 {
@@ -81,37 +69,25 @@ JSON;
             ->scrubMember('Scrub', 'Memory Info'));
     }
 
-    /**
-     * @test
-     */
-    public function verifyJsonGuid(): void
+    public function testVerifyJsonGuid(): void
     {
         $json = '{"key": "c572ff75-e1a2-49bd-99b9-4550697946c3"}';
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function verifyJsonEmpty(): void
+    public function testVerifyJsonEmpty(): void
     {
         Approvals::verifyJson('{}');
     }
 
-    /**
-     * @test
-     */
-    public function verifyJsonDateTime(): void
+    public function testVerifyJsonDateTime(): void
     {
         $date = date('Y-m-d\TH:i:s');
         $json = sprintf('{"key": "%s"}', $date);
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function verifyJsonWithArray(): void
+    public function testVerifyJsonWithArray(): void
     {
         $json = <<<JSON
 {
@@ -126,10 +102,7 @@ JSON;
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function verifyJsonWithArrayAtRoot(): void
+    public function testVerifyJsonWithArrayAtRoot(): void
     {
         $json = <<<JSON
 [
@@ -142,19 +115,13 @@ JSON;
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function verifyJsonString(): void
+    public function testVerifyJsonString(): void
     {
         $json = '{"key": {"msg": "No action taken"}}';
         Approvals::verifyJson($json);
     }
 
-    /**
-     * @test
-     */
-    public function ignoreJTokenByName(): void
+    public function testIgnoreJTokenByName(): void
     {
         $json = <<<JSON
 {
@@ -175,10 +142,7 @@ JSON;
             ->ignoreMember('Ignore1'));
     }
 
-    /**
-     * @test
-     */
-    public function scrubJTokenByName(): void
+    public function testScrubJTokenByName(): void
     {
         $json = <<<JSON
 {
@@ -199,10 +163,7 @@ JSON;
             ->scrubMember('Scrub'));
     }
 
-    /**
-     * @test
-     */
-    public function regexScrubbing(): void
+    public function testRegexScrubbing(): void
     {
         $json = <<<JSON
 {
@@ -218,10 +179,7 @@ JSON;
             ->addScrubber(RegexScrubber::create(['/"id": "([A-Z]{3}\d{3})"/' => '"id": "MATCHED"'])));
     }
 
-    /**
-     * @test
-     */
-    public function multipleRegexScrubbing(): void
+    public function testMultipleRegexScrubbing(): void
     {
         $json = <<<JSON
 {
