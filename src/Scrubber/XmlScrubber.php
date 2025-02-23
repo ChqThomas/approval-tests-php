@@ -8,6 +8,7 @@ class XmlScrubber extends AbstractScrubber
 {
     public function scrub(string $content): string
     {
+        $this->resetCounters();
         $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;

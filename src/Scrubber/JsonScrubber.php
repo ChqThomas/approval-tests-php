@@ -8,6 +8,7 @@ class JsonScrubber extends AbstractScrubber
 {
     public function scrub(string $content): string
     {
+        $this->resetCounters();
         // Decode JSON
         $data = json_decode($content, true);
         if (json_last_error() !== JSON_ERROR_NONE) {

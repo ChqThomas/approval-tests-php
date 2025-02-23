@@ -36,6 +36,15 @@ abstract class AbstractScrubber implements Scrubber
         return $this;
     }
 
+    public function resetCounters(): self
+    {
+        $this->guidCounter = 1;
+        $this->dateCounter = 1;
+        $this->dateMap = [];
+        $this->guidMap = [];
+        return $this;
+    }
+
     protected function scrubGuids(string $content): string
     {
         return preg_replace_callback(
