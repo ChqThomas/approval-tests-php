@@ -1,0 +1,15 @@
+-
+    __class: Tests\fixtures\UserDto
+    name: 'User 1'
+    createdAt: 'DateTimeOffset_1'
+    child: null
+-
+    __class: Tests\fixtures\UserDto
+    name: 'User 2'
+    createdAt: 'DateTimeOffset_1'
+    child: null
+-
+    __class: Tests\fixtures\UserDto
+    name: 'User 3'
+    createdAt: 'DateTimeOffset_1'
+    child: null

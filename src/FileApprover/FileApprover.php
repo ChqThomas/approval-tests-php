@@ -1,8 +1,7 @@
 <?php
 
-namespace ApprovalTests;
+namespace ApprovalTests\FileApprover;
 
-use ApprovalTests\Core\FileApproverBase;
 use ApprovalTests\Core\ApprovalNamer;
 use ApprovalTests\Namer\TestNamer;
 

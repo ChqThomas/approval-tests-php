@@ -11,6 +11,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": ">=9.5",
+        "symfony/serializer": "^4.0 || ^5.0 || ^6.0 || ^7.0",
+        "symfony/property-access": "^4.0 || ^5.0 || ^6.0 || ^7.0",
+        "symfony/yaml": "^4.0 || ^5.0 || ^6.0 || ^7.0",
         "friendsofphp/php-cs-fixer": "^3.68"
     },
     "autoload": {
@@ -30,7 +33,13 @@
             ]
         }
     },
+    "suggest": {
+      "symfony/serializer": "Allows using the Symfony Serializer to format objects in Approvals",
+      "symfony/property-access": "Rquire for the Serializer if you use private/protected properties",
+      "symfony/yaml": "Allows serializing objects in YAML"
+    },
     "scripts": {
+      "lint": "php-cs-fixer fix",
       "test": "phpunit --testdox",
       "test-7.4": "docker run --rm -v $(pwd):/app/ -w /app jakzal/phpqa:php7.4 bash -c 'composer update --no-interaction --prefer-lowest && php -d date.timezone=UTC vendor/bin/phpunit && composer update --no-interaction && php -d date.timezone=UTC vendor/bin/phpunit'",
       "test-8.0": "docker run --rm -v $(pwd):/app/ -w /app jakzal/phpqa:php8.0 bash -c 'composer update --no-interaction --prefer-lowest && php -d date.timezone=UTC vendor/bin/phpunit && composer update --no-interaction && php -d date.timezone=UTC vendor/bin/phpunit'",
@@ -44,5 +53,7 @@
         "@test-8.2",
         "@test-8.3"
       ]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

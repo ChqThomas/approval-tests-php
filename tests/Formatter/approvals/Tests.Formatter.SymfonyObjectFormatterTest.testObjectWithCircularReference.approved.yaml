@@ -1,0 +1,14 @@
+__class: Tests\fixtures\UserDto
+name: 'Root User'
+createdAt: 'DateTimeOffset_1'
+child:
+    __class: Tests\fixtures\UserDto
+    name: 'Parent 3'
+    createdAt: 'DateTimeOffset_1'
+    child:
+        __class: Tests\fixtures\UserDto
+        name: 'Parent 1'
+        createdAt: 'DateTimeOffset_1'
+        child:
+            __class: Tests\fixtures\UserDto
+            __toString: 'Parent 3'

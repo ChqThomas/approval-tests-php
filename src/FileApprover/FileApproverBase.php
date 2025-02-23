@@ -1,8 +1,11 @@
 <?php
 
-namespace ApprovalTests\Core;
+namespace ApprovalTests\FileApprover;
 
 use ApprovalTests\Configuration;
+use ApprovalTests\Core\ApprovalNamer;
+use ApprovalTests\Core\ApprovalReporter;
+use ApprovalTests\Core\Scrubber;
 use ApprovalTests\CustomApprovalException;
 use ApprovalTests\Writer\ApprovalWriter;
 use ApprovalTests\Writer\TextWriter;
@@ -74,7 +77,7 @@ abstract class FileApproverBase
 
     protected function handleNewTest(array $files): void
     {
-        if (getenv('APPROVE_SNAPSHOTS') === 'true') {
+        if (Configuration::getInstance()->isAutoApprove()) {
             copy($files['received'], $files['approved']);
             return;
         }
@@ -82,7 +85,8 @@ abstract class FileApproverBase
         file_put_contents($files['approved'], '');
         $this->getReporter()->report($files['received'], $files['approved']);
         throw new CustomApprovalException(
-            "New test: please verify the received file and copy it to approved if correct.\n",
+            "New test: please verify the received file and copy it to approved if correct.\n" .
+            sprintf("mv %s %s", $files['received'], $files['approved']),
             $files['approved'],
             $files['received']
         );
