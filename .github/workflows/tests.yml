@@ -13,7 +13,7 @@ jobs:
       matrix:
         php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
         symfony-version: ['^4.0', '^5.0', '^6.0', '^7.0']
-        phpunit-version: ['^9.5', '^10.0', '^11.0', '^12.0']
+        phpunit-version: ['^9.5', '^10.1', '^11.0', '^12.0']
         exclude:
           # Symfony 7 requires PHP 8.2+
           - symfony-version: '^7.0'
@@ -28,9 +28,9 @@ jobs:
             php-version: '7.4'
 
           # PHPUnit 10 requires PHP 8.1+
-          - phpunit-version: '^10.0'
+          - phpunit-version: '^10.1'
             php-version: '7.4'
-          - phpunit-version: '^10.0'
+          - phpunit-version: '^10.1'
             php-version: '8.0'
 
           # PHPUnit 11 requires PHP 8.2+

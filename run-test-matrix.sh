@@ -18,12 +18,12 @@ show_help() {
     echo "Options:"
     echo "  --php <version>      Specific PHP version (7.4|8.0|8.1|8.2|8.3)"
     echo "  --symfony <version>  Specific Symfony version (^4.0|^5.0|^6.0|^7.0)"
-    echo "  --phpunit <version>  Specific PHPUnit version (^9.5|^10.0|^11.0|^12.0)"
+    echo "  --phpunit <version>  Specific PHPUnit version (^9.5|^10.1|^11.0|^12.0)"
     echo "  --debug             Show composer and test output"
     echo "  -h, --help          Show this help message"
     echo
     echo "Example:"
-    echo "  $0 --php 8.1 --symfony ^6.0 --phpunit ^10.0"
+    echo "  $0 --php 8.1 --symfony ^6.0 --phpunit ^10.1"
     exit 0
 }
 
@@ -73,7 +73,7 @@ declare -A RESULTS
 # Define versions to test
 ALL_PHP_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3")
 ALL_SYMFONY_VERSIONS=("^4.0" "^5.0" "^6.0" "^7.0")
-ALL_PHPUNIT_VERSIONS=("^9.5" "^10.0" "^11.0" "^12.0")
+ALL_PHPUNIT_VERSIONS=("^9.5" "^10.1" "^11.0" "^12.0")
 
 # Filter versions based on arguments
 PHP_VERSIONS=(${PHP_FILTER:-${ALL_PHP_VERSIONS[@]}})
@@ -122,7 +122,7 @@ check_compatibility() {
     fi
 
     # PHPUnit 10 requires PHP 8.1
-    if [[ "$phpunit_version" == "^10.0" && $(echo "$php_version < 8.1" | bc -l) == 1 ]]; then
+    if [[ "$phpunit_version" == "^10.1" && $(echo "$php_version < 8.1" | bc -l) == 1 ]]; then
         return 1
     fi
 
@@ -168,7 +168,7 @@ for php_version in "${PHP_VERSIONS[@]}"; do
                 composer require --dev --no-update ${QUIET_FLAGS} \"symfony/property-access:${symfony_version}\" && \
                 composer require --dev --no-update ${QUIET_FLAGS} \"symfony/yaml:${symfony_version}\" && \
                 composer require --dev --no-update ${QUIET_FLAGS} \"phpunit/phpunit:${phpunit_version}\" && \
-                composer update --no-interaction --with-all-dependencies --no-suggest --no-audit ${QUIET_FLAGS} && \
+                composer update --prefer-lowest --no-interaction --with-all-dependencies --no-suggest --no-audit ${QUIET_FLAGS} && \
                 php -d date.timezone=UTC vendor/bin/phpunit
             "
 
