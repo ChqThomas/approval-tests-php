@@ -2,30 +2,46 @@
 
 namespace ApprovalTests;
 
-use ApprovalTests\Writer\TextWriter;
-use ApprovalTests\Writer\BinaryWriter;
+use ApprovalTests\Combinations\CombinationApprovals;
+use ApprovalTests\FileApprover\FileApprover;
 use ApprovalTests\Namer\EnvironmentAwareNamer;
 use ApprovalTests\Namer\TestNamer;
+use ApprovalTests\Scrubber\CsvScrubber;
 use ApprovalTests\Scrubber\HtmlScrubber;
 use ApprovalTests\Scrubber\JsonScrubber;
 use ApprovalTests\Scrubber\XmlScrubber;
-use ApprovalTests\Combinations\CombinationApprovals;
-use ApprovalTests\Scrubber\CsvScrubber;
+use ApprovalTests\Writer\BinaryWriter;
+use ApprovalTests\Writer\TextWriter;
 
 class Approvals
 {
+    private static function getConfig(): Configuration
+    {
+        return Configuration::getInstance();
+    }
+
     public static function verify($objectToVerify): void
     {
         $approver = new FileApprover();
-        $text = is_string($objectToVerify) ? $objectToVerify : json_encode($objectToVerify, JSON_PRETTY_PRINT);
-        $writer = new TextWriter($text);
-        $approver->verify($text, null, $writer);
+        $text = is_string($objectToVerify)
+            ? $objectToVerify
+            : ((is_object($objectToVerify) || is_array($objectToVerify))
+                ? self::getConfig()->getObjectFormatter()->format($objectToVerify)
+                : json_encode($objectToVerify, JSON_PRETTY_PRINT));
+
+        $extension = is_string($objectToVerify) ? 'txt' : 'yaml';
+
+        $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('text');
+        $scrubbedJson = $scrubber->scrub($text);
+
+        $writer = new TextWriter($scrubbedJson, $extension);
+        $approver->verify($scrubbedJson, null, $writer);
     }
 
     public static function verifyHtml(string $html, ?HtmlScrubber $scrubber = null): void
     {
         $approver = new FileApprover();
-        $scrubber = $scrubber ?? new HtmlScrubber();
+        $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('html');
 
         $scrubbedHtml = $scrubber->scrub($html);
         $writer = new TextWriter($scrubbedHtml, 'html');
@@ -35,7 +51,7 @@ class Approvals
     public static function verifyJson(string $json, ?JsonScrubber $scrubber = null): void
     {
         $approver = new FileApprover();
-        $scrubber = $scrubber ?? new JsonScrubber();
+        $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('json');
 
         $scrubbedJson = $scrubber->scrub($json);
         $writer = new TextWriter($scrubbedJson, 'json');
@@ -45,7 +61,7 @@ class Approvals
     public static function verifyXml(string $xml, ?XmlScrubber $scrubber = null): void
     {
         $approver = new FileApprover();
-        $scrubber = $scrubber ?? new XmlScrubber();
+        $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('xml');
 
         $scrubbedXml = $scrubber->scrub($xml);
         $writer = new TextWriter($scrubbedXml, 'xml');
