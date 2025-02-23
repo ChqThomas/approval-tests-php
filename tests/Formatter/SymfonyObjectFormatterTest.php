@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Formatter;
+namespace ChqThomas\ApprovalTests\Tests\Formatter;
 
-use ApprovalTests\Approvals;
+use ChqThomas\ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
-use Tests\fixtures\UserDto;
+use ChqThomas\ApprovalTests\Tests\fixtures\UserDto;
 
 class SymfonyObjectFormatterTest extends TestCase
 {

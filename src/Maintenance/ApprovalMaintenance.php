@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Maintenance;
+namespace ChqThomas\ApprovalTests\Maintenance;
 
 class ApprovalMaintenance
 {

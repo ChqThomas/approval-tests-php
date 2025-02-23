@@ -1,4 +1,4 @@
-__class: Tests\fixtures\UserDto
+__class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
 name: 'John Doe'
 createdAt: 'DateTimeOffset_1'
 child: null

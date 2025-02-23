@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\PHPUnit;
+namespace ChqThomas\ApprovalTests\PHPUnit;
 
 use PHPUnit\Event\Test\Failed;
 use PHPUnit\Event\Test\FailedSubscriber;

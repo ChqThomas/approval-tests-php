@@ -1,17 +1,17 @@
 <?php
 
-namespace ApprovalTests;
+namespace ChqThomas\ApprovalTests;
 
-use ApprovalTests\Combinations\CombinationApprovals;
-use ApprovalTests\FileApprover\FileApprover;
-use ApprovalTests\Namer\EnvironmentAwareNamer;
-use ApprovalTests\Namer\TestNamer;
-use ApprovalTests\Scrubber\CsvScrubber;
-use ApprovalTests\Scrubber\HtmlScrubber;
-use ApprovalTests\Scrubber\JsonScrubber;
-use ApprovalTests\Scrubber\XmlScrubber;
-use ApprovalTests\Writer\BinaryWriter;
-use ApprovalTests\Writer\TextWriter;
+use ChqThomas\ApprovalTests\Combinations\CombinationApprovals;
+use ChqThomas\ApprovalTests\FileApprover\FileApprover;
+use ChqThomas\ApprovalTests\Namer\EnvironmentAwareNamer;
+use ChqThomas\ApprovalTests\Namer\TestNamer;
+use ChqThomas\ApprovalTests\Scrubber\CsvScrubber;
+use ChqThomas\ApprovalTests\Scrubber\HtmlScrubber;
+use ChqThomas\ApprovalTests\Scrubber\JsonScrubber;
+use ChqThomas\ApprovalTests\Scrubber\XmlScrubber;
+use ChqThomas\ApprovalTests\Writer\BinaryWriter;
+use ChqThomas\ApprovalTests\Writer\TextWriter;
 
 class Approvals
 {

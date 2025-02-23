@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Xml;
+namespace ChqThomas\ApprovalTests\Tests\Xml;
 
-use ApprovalTests\Approvals;
-use ApprovalTests\Scrubber\RegexScrubber;
-use ApprovalTests\Scrubber\XmlScrubber;
+use ChqThomas\ApprovalTests\Approvals;
+use ChqThomas\ApprovalTests\Scrubber\RegexScrubber;
+use ChqThomas\ApprovalTests\Scrubber\XmlScrubber;
 use PHPUnit\Framework\TestCase;
 
 class XmlTest extends TestCase

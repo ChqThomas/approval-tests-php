@@ -1,8 +1,8 @@
 <?php
 
-namespace ApprovalTests\Namer;
+namespace ChqThomas\ApprovalTests\Namer;
 
-use ApprovalTests\Core\ApprovalNamer;
+use ChqThomas\ApprovalTests\Core\ApprovalNamer;
 
 class EnvironmentAwareNamer implements ApprovalNamer
 {

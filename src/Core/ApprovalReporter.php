@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Core;
+namespace ChqThomas\ApprovalTests\Core;
 
 interface ApprovalReporter
 {

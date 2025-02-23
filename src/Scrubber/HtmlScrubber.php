@@ -1,8 +1,8 @@
 <?php
 
-namespace ApprovalTests\Scrubber;
+namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ApprovalTests\Formatter\HtmlFormatter;
+use ChqThomas\ApprovalTests\Formatter\HtmlFormatter;
 
 class HtmlScrubber extends ScrubberBase
 {

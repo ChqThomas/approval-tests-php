@@ -14,8 +14,9 @@ composer require chqthomas/approval-tests
 ## Basic Usage
 
 ### Simple Test
+
 ```php
-use ApprovalTests\Approvals;
+use ChqThomas\ApprovalTests\Approvals;
 
 public function testSimpleString(): void 
 {
@@ -301,8 +302,9 @@ APPROVE_SNAPSHOTS=true vendor/bin/phpunit
 ## Maintenance
 
 ### Cleanup Received Files
+
 ```php
-use ApprovalTests\ApprovalMaintenance;
+use ChqThomas\ApprovalTests\ApprovalMaintenance;
 
 // Delete .received files that match .approved files
 ApprovalMaintenance::cleanUpReceivedFiles(__DIR__ . '/tests/approvals');
@@ -319,24 +321,27 @@ $orphanedFiles = ApprovalMaintenance::findOrphanedApprovedFiles(__DIR__ . '/test
 Reporters define how differences are reported.
 
 ### CLI Reporter
+
 ```php
-use ApprovalTests\Reporter\CliReporter;
+use ChqThomas\ApprovalTests\Reporter\CliReporter;
 
 // Default configuration
 Configuration::getInstance()->setReporter(new CliReporter());
 ```
 
 ### Diff Reporter
+
 ```php
-use ApprovalTests\Reporter\DiffReporter;
+use ChqThomas\ApprovalTests\Reporter\DiffReporter;
 
 // Show differences using diff
 Configuration::getInstance()->setReporter(new DiffReporter());
 ```
 
 ### Composite Reporter
+
 ```php
-use ApprovalTests\Reporter\CompositeReporter;
+use ChqThomas\ApprovalTests\Reporter\CompositeReporter;
 
 // Combine multiple reporters
 $reporter = new CompositeReporter([

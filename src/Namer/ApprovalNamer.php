@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Namer;
+namespace ChqThomas\ApprovalTests\Namer;
 
 interface ApprovalNamer
 {

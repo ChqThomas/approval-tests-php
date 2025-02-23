@@ -1,9 +1,9 @@
 <?php
 
-namespace ApprovalTests\PHPUnit;
+namespace ChqThomas\ApprovalTests\PHPUnit;
 
-use ApprovalTests\CustomApprovalException;
-use ApprovalTests\Reporter\DiffReporter;
+use ChqThomas\ApprovalTests\CustomApprovalException;
+use ChqThomas\ApprovalTests\Reporter\DiffReporter;
 use PHPUnit\Framework\ExceptionWrapper;
 
 abstract class AbstractApprovalTestHandler

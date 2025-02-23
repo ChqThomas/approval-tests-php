@@ -1,17 +1,19 @@
 <?php
 
-namespace ApprovalTests;
+namespace ChqThomas\ApprovalTests;
 
-use ApprovalTests\Core\ApprovalReporter;
-use ApprovalTests\Core\Scrubber;
-use ApprovalTests\Formatter\ObjectFormatterInterface;
-use ApprovalTests\Reporter\ReporterFactory;
-use ApprovalTests\Scrubber\CsvScrubber;
-use ApprovalTests\Scrubber\HtmlScrubber;
-use ApprovalTests\Scrubber\JsonScrubber;
-use ApprovalTests\Scrubber\RegexScrubber;
-use ApprovalTests\Scrubber\TextScrubber;
-use ApprovalTests\Scrubber\XmlScrubber;
+use ChqThomas\ApprovalTests\Core\ApprovalReporter;
+use ChqThomas\ApprovalTests\Core\Scrubber;
+use ChqThomas\ApprovalTests\Formatter\DefaultObjectFormatter;
+use ChqThomas\ApprovalTests\Formatter\ObjectFormatterInterface;
+use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
+use ChqThomas\ApprovalTests\Reporter\ReporterFactory;
+use ChqThomas\ApprovalTests\Scrubber\CsvScrubber;
+use ChqThomas\ApprovalTests\Scrubber\HtmlScrubber;
+use ChqThomas\ApprovalTests\Scrubber\JsonScrubber;
+use ChqThomas\ApprovalTests\Scrubber\RegexScrubber;
+use ChqThomas\ApprovalTests\Scrubber\TextScrubber;
+use ChqThomas\ApprovalTests\Scrubber\XmlScrubber;
 
 class Configuration
 {
@@ -36,9 +38,9 @@ class Configuration
         $this->setReporter(ReporterFactory::getDefaultReporter());
 
         if (class_exists(\Symfony\Component\Serializer\Serializer::class)) {
-            $this->objectFormatter = new Formatter\SymfonyObjectFormatter();
+            $this->objectFormatter = new SymfonyObjectFormatter();
         } else {
-            $this->objectFormatter = new Formatter\DefaultObjectFormatter();
+            $this->objectFormatter = new DefaultObjectFormatter();
         }
     }
 

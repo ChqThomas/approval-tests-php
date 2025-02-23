@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ApprovalTests\\": "src/"
+            "ChqThomas\\ApprovalTests\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "ChqThomas\\ApprovalTests\\Tests\\": "tests/"
         }
     },
     "extra": {

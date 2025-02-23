@@ -1,9 +1,9 @@
 <?php
 
-namespace ApprovalTests\Namer;
+namespace ChqThomas\ApprovalTests\Namer;
 
-use ApprovalTests\Core\ApprovalNamer;
-use ApprovalTests\ApprovalException;
+use ChqThomas\ApprovalTests\Core\ApprovalNamer;
+use ChqThomas\ApprovalTests\ApprovalException;
 use PHPUnit\Framework\TestCase;
 
 class TestNamer implements ApprovalNamer

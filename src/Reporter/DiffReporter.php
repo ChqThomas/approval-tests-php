@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Reporter;
+namespace ChqThomas\ApprovalTests\Reporter;
 
 class DiffReporter implements ReporterInterface
 {

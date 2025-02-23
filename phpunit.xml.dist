@@ -10,10 +10,10 @@
         </testsuite>
     </testsuites>
     <listeners>
-        <listener class="ApprovalTests\PHPUnit\TestListener"/>
+        <listener class="ChqThomas\ApprovalTests\PHPUnit\TestListener"/>
     </listeners>
 <!--    <extensions>-->
-<!--        <bootstrap class="ApprovalTests\PHPUnit\ApprovalTestExtensiona">-->
+<!--        <bootstrap class="ChqThomas\ApprovalTests\PHPUnit\ApprovalTestExtensiona">-->
 <!--        </bootstrap>-->
 <!--    </extensions>-->
 </phpunit>

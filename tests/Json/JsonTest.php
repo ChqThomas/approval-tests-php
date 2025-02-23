@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Json;
+namespace ChqThomas\ApprovalTests\Tests\Json;
 
-use ApprovalTests\Approvals;
+use ChqThomas\ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
-use ApprovalTests\Scrubber\JsonScrubber;
-use ApprovalTests\Scrubber\RegexScrubber;
+use ChqThomas\ApprovalTests\Scrubber\JsonScrubber;
+use ChqThomas\ApprovalTests\Scrubber\RegexScrubber;
 
 class JsonTest extends TestCase
 {

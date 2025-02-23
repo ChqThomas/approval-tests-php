@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\fixtures;
+namespace ChqThomas\ApprovalTests\Tests\fixtures;
 
 class UserDto
 {

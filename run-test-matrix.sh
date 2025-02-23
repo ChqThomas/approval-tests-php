@@ -168,7 +168,7 @@ for php_version in "${PHP_VERSIONS[@]}"; do
                 composer require --dev --no-update ${QUIET_FLAGS} \"symfony/property-access:${symfony_version}\" && \
                 composer require --dev --no-update ${QUIET_FLAGS} \"symfony/yaml:${symfony_version}\" && \
                 composer require --dev --no-update ${QUIET_FLAGS} \"phpunit/phpunit:${phpunit_version}\" && \
-                composer update --prefer-lowest --no-interaction --with-all-dependencies --no-suggest --no-audit ${QUIET_FLAGS} && \
+                composer update --no-interaction --with-all-dependencies --no-suggest --no-audit ${QUIET_FLAGS} && \
                 php -d date.timezone=UTC vendor/bin/phpunit
             "
 

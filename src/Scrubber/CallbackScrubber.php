@@ -1,8 +1,8 @@
 <?php
 
-namespace ApprovalTests\Scrubber;
+namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ApprovalTests\Core\Scrubber;
+use ChqThomas\ApprovalTests\Core\Scrubber;
 
 class CallbackScrubber implements Scrubber
 {

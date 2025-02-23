@@ -1,8 +1,8 @@
 <?php
 
-namespace ApprovalTests\Combinations;
+namespace ChqThomas\ApprovalTests\Combinations;
 
-use ApprovalTests\Approvals;
+use ChqThomas\ApprovalTests\Approvals;
 
 class CombinationApprovals
 {

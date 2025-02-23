@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Formatter;
+namespace ChqThomas\ApprovalTests\Formatter;
 
 /**
  * @link https://github.com/gajus/dindent for the canonical source repository

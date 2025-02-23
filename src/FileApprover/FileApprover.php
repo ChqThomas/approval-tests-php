@@ -1,9 +1,9 @@
 <?php
 
-namespace ApprovalTests\FileApprover;
+namespace ChqThomas\ApprovalTests\FileApprover;
 
-use ApprovalTests\Core\ApprovalNamer;
-use ApprovalTests\Namer\TestNamer;
+use ChqThomas\ApprovalTests\Core\ApprovalNamer;
+use ChqThomas\ApprovalTests\Namer\TestNamer;
 
 class FileApprover extends FileApproverBase
 {

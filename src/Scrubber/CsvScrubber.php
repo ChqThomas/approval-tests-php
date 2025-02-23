@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Scrubber;
+namespace ChqThomas\ApprovalTests\Scrubber;
 
 class CsvScrubber extends ScrubberBase
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace ApprovalTests\Reporter;
+namespace ChqThomas\ApprovalTests\Reporter;
 
-use ApprovalTests\Core\ApprovalReporter;
+use ChqThomas\ApprovalTests\Core\ApprovalReporter;
 
 class ReporterFactory
 {

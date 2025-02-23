@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests;
+namespace ChqThomas\ApprovalTests;
 
 class ApprovalException extends \Exception
 {

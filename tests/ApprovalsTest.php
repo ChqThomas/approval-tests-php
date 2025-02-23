@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests;
+namespace ChqThomas\ApprovalTests\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpunit;
 use PHPUnit\Framework\TestCase;
-use ApprovalTests\Approvals;
-use ApprovalTests\Scrubber\CallbackScrubber;
+use ChqThomas\ApprovalTests\Approvals;
+use ChqThomas\ApprovalTests\Scrubber\CallbackScrubber;
 
 class ApprovalsTest extends TestCase
 {

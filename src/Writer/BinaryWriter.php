@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Writer;
+namespace ChqThomas\ApprovalTests\Writer;
 
 class BinaryWriter implements ApprovalWriter
 {

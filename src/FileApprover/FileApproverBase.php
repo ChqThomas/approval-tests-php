@@ -1,14 +1,14 @@
 <?php
 
-namespace ApprovalTests\FileApprover;
+namespace ChqThomas\ApprovalTests\FileApprover;
 
-use ApprovalTests\Configuration;
-use ApprovalTests\Core\ApprovalNamer;
-use ApprovalTests\Core\ApprovalReporter;
-use ApprovalTests\Core\Scrubber;
-use ApprovalTests\CustomApprovalException;
-use ApprovalTests\Writer\ApprovalWriter;
-use ApprovalTests\Writer\TextWriter;
+use ChqThomas\ApprovalTests\Configuration;
+use ChqThomas\ApprovalTests\Core\ApprovalNamer;
+use ChqThomas\ApprovalTests\Core\ApprovalReporter;
+use ChqThomas\ApprovalTests\Core\Scrubber;
+use ChqThomas\ApprovalTests\CustomApprovalException;
+use ChqThomas\ApprovalTests\Writer\ApprovalWriter;
+use ChqThomas\ApprovalTests\Writer\TextWriter;
 use PHPUnit\Framework\Assert;
 use SebastianBergmann\Comparator\ComparisonFailure;
 

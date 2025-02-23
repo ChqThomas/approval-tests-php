@@ -1,6 +1,6 @@
 <?php
 
-namespace ApprovalTests\Formatter;
+namespace ChqThomas\ApprovalTests\Formatter;
 
 class DefaultObjectFormatter implements ObjectFormatterInterface
 {
