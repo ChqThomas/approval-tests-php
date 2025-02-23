@@ -4,6 +4,7 @@ namespace ChqThomas\ApprovalTests;
 
 use ChqThomas\ApprovalTests\Combinations\CombinationApprovals;
 use ChqThomas\ApprovalTests\FileApprover\FileApprover;
+use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
 use ChqThomas\ApprovalTests\Namer\EnvironmentAwareNamer;
 use ChqThomas\ApprovalTests\Namer\TestNamer;
 use ChqThomas\ApprovalTests\Scrubber\CsvScrubber;
@@ -29,7 +30,12 @@ class Approvals
                 ? self::getConfig()->getObjectFormatter()->format($objectToVerify)
                 : json_encode($objectToVerify, JSON_PRETTY_PRINT));
 
-        $extension = is_string($objectToVerify) ? 'txt' : 'yaml';
+        $extension = 'txt';
+
+        // @todo should not be here
+        if ((is_object($objectToVerify) || is_array($objectToVerify)) && self::getConfig()->getObjectFormatter() instanceof SymfonyObjectFormatter) {
+            $extension = 'yaml';
+        }
 
         $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('text');
         $scrubbedJson = $scrubber->scrub($text);

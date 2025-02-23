@@ -4,15 +4,16 @@ namespace ChqThomas\ApprovalTests\Tests\Formatter;
 
 use ChqThomas\ApprovalTests\Approvals;
 use ChqThomas\ApprovalTests\Configuration;
+use ChqThomas\ApprovalTests\Formatter\DefaultObjectFormatter;
 use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
 use PHPUnit\Framework\TestCase;
 use ChqThomas\ApprovalTests\Tests\fixtures\UserDto;
 
-class SymfonyObjectFormatterTest extends TestCase
+class DefaultObjectFormatterTest extends TestCase
 {
     protected function setUp(): void
     {
-        Configuration::getInstance()->setObjectFormatter(new SymfonyObjectFormatter());
+        Configuration::getInstance()->setObjectFormatter(new DefaultObjectFormatter());
     }
 
     public function testObject(): void

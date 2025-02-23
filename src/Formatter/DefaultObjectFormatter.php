@@ -9,6 +9,11 @@ class DefaultObjectFormatter implements ObjectFormatterInterface
      */
     private array $formatters = [];
 
+    /**
+     * @var array<string, bool>
+     */
+    private array $processedObjects = [];
+
     public function __construct()
     {
         $this->addFormatter(new DateTimeFormatter());
@@ -22,10 +27,21 @@ class DefaultObjectFormatter implements ObjectFormatterInterface
 
     public function canFormat($object): bool
     {
-        return is_object($object);
+        return is_object($object) || is_array($object);
     }
 
-    public function format($object): string
+    public function format($input): string
+    {
+        $this->processedObjects = []; // Reset processed objects for new format operation
+
+        if (is_array($input)) {
+            return $this->formatArray($input);
+        }
+
+        return $this->formatWithCircularCheck($input);
+    }
+
+    private function formatWithCircularCheck($object): string
     {
         foreach ($this->formatters as $formatter) {
             if ($formatter->canFormat($object)) {
@@ -38,6 +54,14 @@ class DefaultObjectFormatter implements ObjectFormatterInterface
 
     private function formatObjectRecursively($object): string
     {
+        $objectHash = spl_object_hash($object);
+
+        if (isset($this->processedObjects[$objectHash])) {
+            return "** Circular Reference to " . get_class($object) . " **";
+        }
+
+        $this->processedObjects[$objectHash] = true;
+
         $reflection = new \ReflectionClass($object);
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
 
@@ -50,17 +74,34 @@ class DefaultObjectFormatter implements ObjectFormatterInterface
             $result[] = "  {$property->getName()}: {$formattedValue}";
         }
 
+        unset($this->processedObjects[$objectHash]);
+
         return implode("\n", $result);
     }
 
     private function formatValue($value): string
     {
         if (is_object($value)) {
-            return $this->format($value);
+            return $this->formatWithCircularCheck($value);
         } elseif (is_array($value)) {
-            return json_encode($value, JSON_PRETTY_PRINT);
+            return $this->formatArray($value);
         } else {
             return var_export($value, true);
         }
+    }
+
+    private function formatArray($array): string
+    {
+        $formatted = [];
+        foreach ($array as $value) {
+            if (is_object($value)) {
+                $formatted[] = $this->formatWithCircularCheck($value);
+            } else if (is_array($value)) {
+                $formatted[] = $this->formatArray($value);
+            } else {
+                $formatted[] = var_export($value, true);
+            }
+        }
+        return implode("\n", $formatted);
     }
 }

@@ -1,0 +1,12 @@
+Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'User 1'
+  createdAt: DateTimeOffset_1
+  child: NULL
+Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'User 2'
+  createdAt: DateTimeOffset_1
+  child: NULL
+Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'User 3'
+  createdAt: DateTimeOffset_1
+  child: NULL

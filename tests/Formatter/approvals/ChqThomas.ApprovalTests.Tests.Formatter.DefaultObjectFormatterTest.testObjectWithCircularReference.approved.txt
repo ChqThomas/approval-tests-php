@@ -1,0 +1,10 @@
+Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'Root User'
+  createdAt: DateTimeOffset_1
+  child: Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'Parent 3'
+  createdAt: DateTimeOffset_1
+  child: Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'Parent 1'
+  createdAt: DateTimeOffset_1
+  child: ** Circular Reference to ChqThomas\ApprovalTests\Tests\fixtures\UserDto **

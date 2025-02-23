@@ -1,0 +1,10 @@
+Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'Level 1'
+  createdAt: DateTimeOffset_1
+  child: Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'Level 2'
+  createdAt: DateTimeOffset_1
+  child: Class: ChqThomas\ApprovalTests\Tests\fixtures\UserDto
+  name: 'Level 3'
+  createdAt: DateTimeOffset_1
+  child: NULL
