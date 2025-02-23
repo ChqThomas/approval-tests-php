@@ -12,38 +12,91 @@ jobs:
     strategy:
       matrix:
         php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
-        
-    name: PHP ${{ matrix.php-version }}
-    
+        symfony-version: ['^4.0', '^5.0', '^6.0', '^7.0']
+        phpunit-version: ['^9.5', '^10.0', '^11.0', '^12.0']
+        exclude:
+          # Symfony 7 requires PHP 8.2+
+          - symfony-version: '^7.0'
+            php-version: '7.4'
+          - symfony-version: '^7.0'
+            php-version: '8.0'
+          - symfony-version: '^7.0'
+            php-version: '8.1'
+
+          # Symfony 6 requires PHP 8.0+
+          - symfony-version: '^6.0'
+            php-version: '7.4'
+
+          # PHPUnit 10 requires PHP 8.1+
+          - phpunit-version: '^10.0'
+            php-version: '7.4'
+          - phpunit-version: '^10.0'
+            php-version: '8.0'
+
+          # PHPUnit 11 requires PHP 8.2+
+          - phpunit-version: '^11.0'
+            php-version: '7.4'
+          - phpunit-version: '^11.0'
+            php-version: '8.0'
+          - phpunit-version: '^11.0'
+            php-version: '8.1'
+
+          # PHPUnit 12 requires PHP 8.3+
+          - phpunit-version: '^12.0'
+            php-version: '7.4'
+          - phpunit-version: '^12.0'
+            php-version: '8.0'
+          - phpunit-version: '^12.0'
+            php-version: '8.1'
+          - phpunit-version: '^12.0'
+            php-version: '8.2'
+
+    name: PHP ${{ matrix.php-version }} - Symfony ${{ matrix.symfony-version }} - PHPUnit ${{ matrix.phpunit-version }}
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-          
+
       - name: Validate composer.json
         run: composer validate --strict
-        
+
       - name: Cache Composer packages
         id: composer-cache
         uses: actions/cache@v4
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-symfony-${{ matrix.symfony-version }}-phpunit-${{ matrix.phpunit-version }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php-version }}-
-            
+            ${{ runner.os }}-php-${{ matrix.php-version }}-symfony-${{ matrix.symfony-version }}-phpunit-${{ matrix.phpunit-version }}-
+
+      - name: Configure Composer minimum stability
+        run: |
+          composer config minimum-stability dev
+          composer config prefer-stable true
+
       - name: Install lowest dependencies
-        run: composer update --prefer-lowest --prefer-dist --no-progress
-        
-      - name: Run test suite
+        run: |
+          composer require --dev --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --dev --no-update "symfony/property-access:${{ matrix.symfony-version }}"
+          composer require --dev --no-update "symfony/yaml:${{ matrix.symfony-version }}"
+          composer require --dev --no-update "phpunit/phpunit:${{ matrix.phpunit-version }}"
+          composer update --prefer-lowest --prefer-dist --no-progress
+
+      - name: Run test suite with lowest dependencies
         run: vendor/bin/phpunit
 
-      - name: Install dependencies
-        run: composer update --prefer-dist --no-progress
+      - name: Install highest dependencies
+        run: |
+          composer require --dev --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --dev --no-update "symfony/property-access:${{ matrix.symfony-version }}"
+          composer require --dev --no-update "symfony/yaml:${{ matrix.symfony-version }}"
+          composer require --dev --no-update "phpunit/phpunit:${{ matrix.phpunit-version }}"
+          composer update --prefer-dist --no-progress
 
-      - name: Run test suite
+      - name: Run test suite with highest dependencies
         run: vendor/bin/phpunit
