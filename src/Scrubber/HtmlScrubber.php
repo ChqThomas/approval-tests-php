@@ -4,9 +4,9 @@ namespace ChqThomas\ApprovalTests\Scrubber;
 
 use ChqThomas\ApprovalTests\Formatter\HtmlFormatter;
 
-class HtmlScrubber extends ScrubberBase
+class HtmlScrubber extends AbstractScrubber
 {
-    protected function preProcess(string $content): string
+    public function scrub(string $content): string
     {
         $dom = new \DOMDocument('1.0');
         $indenter = new HtmlFormatter();
@@ -23,7 +23,7 @@ class HtmlScrubber extends ScrubberBase
             $loadContent = $content;
         } else {
             // Wrapper for HTML fragments
-            $loadContent = "<!DOCTYPE html><html><body>" . $content . "</body></html>";
+            $loadContent = "<!DOCTYPE html><html><meta charset=\"UTF-8\"><body>" . $content . "</body></html>";
         }
 
         if (@$dom->loadHTML($loadContent, LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOXMLDECL)) {
