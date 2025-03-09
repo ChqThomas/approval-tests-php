@@ -1,19 +1,63 @@
 # PHP Approval Tests
 
-A PHP library for approval testing. This approach allows you to verify complex results by comparing them with approved versions.
+A PHP library for approval testing. This approach allows you to verify complex results by comparing them with approved versions, making it ideal for testing outputs that are difficult to assert traditionally (e.g., HTML, JSON, XML, or binary files).
 
 > [!WARNING]  
-> This library is still in development. It is not recommended for production use. A lot of features are still missing, and the API may change.
+> This library is still in development. It is not recommended for production use. Many features are still missing, and the API may change.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+    - [Simple Test](#simple-test)
+    - [Structured Data Test](#structured-data-test)
+- [Specialized Verifications](#specialized-verifications)
+    - [HTML](#html)
+    - [JSON](#json)
+    - [XML](#xml)
+    - [CSV](#csv)
+    - [Binary Files](#binary-files)
+- [Advanced Features](#advanced-features)
+    - [Tests with Data Providers](#tests-with-data-providers)
+    - [Verify All Combinations](#verify-all-combinations)
+- [Configuration](#configuration)
+    - [PHPUnit Bootstrap Configuration](#phpunit-bootstrap-configuration)
+    - [Set a Custom Reporter](#set-a-custom-reporter)
+    - [Use a Custom Object Formatter](#use-a-custom-object-formatter)
+    - [Custom Namer](#custom-namer)
+    - [Auto-Approve Snapshots](#auto-approve-snapshots)
+- [Scrubbers](#scrubbers)
+    - [JSON Scrubbing](#json-scrubbing)
+        - [Ignore JSON Members](#ignore-json-members)
+        - [Scrub JSON Members](#scrub-json-members)
+    - [XML Scrubbing](#xml-scrubbing)
+    - [Regex Scrubbing](#regex-scrubbing)
+    - [Custom Scrubber](#custom-scrubber)
+- [Maintenance](#maintenance)
+    - [Cleanup Received Files](#cleanup-received-files)
+    - [Detect Orphaned Files](#detect-orphaned-files)
+- [Reporters](#reporters)
+    - [CLI Reporter](#cli-reporter)
+    - [Diff Reporter](#diff-reporter)
+    - [Composite Reporter](#composite-reporter)
+- [Symfony Integration](#symfony-integration)
+- [Best Practices](#best-practices)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
-```bash
+Install the library via Composer:
+
+```php
 composer require chqthomas/approval-tests
 ```
 
 ## Basic Usage
 
 ### Simple Test
+
+Verify a simple string output:
 
 ```php
 use ChqThomas\ApprovalTests\Approvals;
@@ -24,7 +68,12 @@ public function testSimpleString(): void
 }
 ```
 
+The first time this runs, it generates a `.received.txt` file. Approve it by renaming it to `.approved.txt` or use auto-approval (see below).
+
 ### Structured Data Test
+
+Verify complex data structures like arrays or objects:
+
 ```php
 public function testArray(): void 
 {
@@ -39,7 +88,12 @@ public function testArray(): void
 
 ## Specialized Verifications
 
+The library supports specific formats with dedicated methods:
+
 ### HTML
+
+Verify HTML content with automatic formatting:
+
 ```php
 public function testHtml(): void 
 {
@@ -49,6 +103,9 @@ public function testHtml(): void
 ```
 
 ### JSON
+
+Verify JSON with pretty-printing and scrubbing:
+
 ```php
 public function testJson(): void 
 {
@@ -58,6 +115,9 @@ public function testJson(): void
 ```
 
 ### XML
+
+Verify XML with formatting:
+
 ```php
 public function testXml(): void 
 {
@@ -67,6 +127,9 @@ public function testXml(): void
 ```
 
 ### CSV
+
+Verify CSV content:
+
 ```php
 public function testCsv(): void 
 {
@@ -76,6 +139,9 @@ public function testCsv(): void
 ```
 
 ### Binary Files
+
+Verify binary content (e.g., images):
+
 ```php
 public function testBinaryFile(): void 
 {
@@ -86,6 +152,9 @@ public function testBinaryFile(): void
 ## Advanced Features
 
 ### Tests with Data Providers
+
+Use PHPUnit data providers for parameterized tests:
+
 ```php
 /**
  * @dataProvider provideTestData
@@ -95,9 +164,20 @@ public function testWithDataProvider(array $data, string $expected): void
     $result = processData($data);
     Approvals::verify($result);
 }
+
+public static function provideTestData(): array
+{
+    return [
+        'case1' => [['input' => 1], 'output1'],
+        'case2' => [['input' => 2], 'output2'],
+    ];
+}
 ```
 
 ### Verify All Combinations
+
+Test all combinations of inputs:
+
 ```php
 public function testAllCombinations(): void 
 {
@@ -118,22 +198,103 @@ public function testAllCombinations(): void
 }
 ```
 
-### Environment-Specific Tests
+## Configuration
+
+Customize the library’s behavior via the `Configuration` class:
+
+### PHPUnit Bootstrap Configuration
+
+Create a `tests/bootstrap.php` file to configure the library globally for all your tests:
+
 ```php
-public function testEnvironmentSpecific(): void 
-{
-    Approvals::verifyWithEnvironment(
-        "Windows-specific content",
-        "Windows_10_Pro"
-    );
-}
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use ChqThomas\ApprovalTests\Configuration;
+use ChqThomas\ApprovalTests\Reporter\DiffReporter;
+use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
+
+// Global configuration
+Configuration::getInstance()
+    ->setReporter(new DiffReporter())
+    ->setObjectFormatter(new SymfonyObjectFormatter())
+    ->setAutoApprove(false);
+
+// Configure default scrubbers for specific formats
+Configuration::getInstance()
+    ->setDefaultScrubber('json', JsonScrubber::create()
+        ->scrubMember('password', 'token')
+        ->ignoreMember('sensitive_data'))
+    ->setDefaultScrubber('xml', XmlScrubber::create()
+        ->addScrubber(RegexScrubber::create([
+            '/\d{4}-\d{2}-\d{2}/' => '[DATE]'
+        ])));
+```
+
+Then reference it in your phpunit.xml:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php">
+    <!-- ... -->
+</phpunit>
+```
+
+### Set a Custom Reporter
+
+Change how differences are reported:
+
+```php
+use ChqThomas\ApprovalTests\Configuration;
+use ChqThomas\ApprovalTests\Reporter\DiffReporter;
+
+Configuration::getInstance()->setReporter(new DiffReporter());
+```
+
+### Use a Custom Object Formatter
+
+Switch between default and Symfony formatters:
+
+```php
+use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
+
+Configuration::getInstance()->setObjectFormatter(new SymfonyObjectFormatter());
+```
+
+*Note*: Requires `symfony/serializer` to be installed for `SymfonyObjectFormatter`.
+
+### Custom Namer
+
+Set a custom namer for file naming:
+
+```php
+use ChqThomas\ApprovalTests\Namer\EnvironmentAwareNamer;
+
+Configuration::getInstance()->setNamerClass(EnvironmentAwareNamer::class);
+```
+
+### Auto-Approve Snapshots
+
+Automatically approve new or changed snapshots:
+
+```php
+Configuration::getInstance()->setAutoApprove(true);
+```
+
+Or use an environment variable:
+
+```php
+APPROVE_SNAPSHOTS=true vendor/bin/phpunit
 ```
 
 ## Scrubbers
 
-Scrubbers allow you to normalize content before comparison.
+Scrubbers normalize content before comparison, handling dynamic data like dates or IDs.
 
 ### JSON Scrubbing
+
+Scrub sensitive or variable data:
 
 ```php
 public function testJsonScrubbing(): void 
@@ -155,6 +316,9 @@ JSON;
 ```
 
 #### Ignore JSON Members
+
+Remove specific members:
+
 ```php
 public function testJsonIgnoreMember(): void 
 {
@@ -174,6 +338,9 @@ JSON;
 ```
 
 #### Scrub JSON Members
+
+Replace members with a placeholder:
+
 ```php
 public function testJsonScrubMember(): void 
 {
@@ -191,6 +358,8 @@ JSON;
 ```
 
 ### XML Scrubbing
+
+Custom scrubbing for XML:
 
 ```php
 public function testXmlScrubbing(): void 
@@ -210,11 +379,9 @@ XML;
 }
 ```
 
-## Regex Scrubbing
+### Regex Scrubbing
 
-`RegexScrubber` allows you to normalize content using regular expressions before comparison. This is particularly useful for replacing values that may change, such as identifiers or names.
-
-### Example of Regex Scrubbing
+Use regular expressions for generic scrubbing:
 
 ```php
 public function testRegexScrubbing(): void 
@@ -234,33 +401,13 @@ JSON;
 }
 ```
 
-### Example of Multiple Regex Scrubbing
+### Custom Scrubber
+
+Create a custom scrubber for any content:
 
 ```php
-public function testMultipleRegexScrubbing(): void 
-{
-    $json = <<<JSON
-{
-  "users": [
-    {"username": "user123", "fullName": "John Doe"},
-    {"username": "user456", "fullName": "Jane Smith"}
-  ]
-}
-JSON;
+use ChqThomas\ApprovalTests\Scrubber\AbstractScrubber;
 
-    Approvals::verifyJson($json, JsonScrubber::create()
-        ->addScrubber(RegexScrubber::create([
-            '/user\d{3}/' => 'userXXX',
-            '/[A-Z][a-z]+ [A-Z][a-z]+/' => 'PERSON_NAME'
-        ])));
-}
-``` 
-
-### Generic Custom Scrubber
-
-For any type of content, you can create a custom scrubber:
-
-```php
 class MyScrubber extends AbstractScrubber
 {
     public function scrub(string $content): string
@@ -291,59 +438,57 @@ public function testWithCustomScrubber(): void
 }
 ```
 
-### Auto-accepting Snapshots
-
-To automatically accept new snapshots or changes:
-
-```bash
-APPROVE_SNAPSHOTS=true vendor/bin/phpunit
-```
-
 ## Maintenance
 
 ### Cleanup Received Files
 
+Remove redundant `.received` files:
+
 ```php
 use ChqThomas\ApprovalTests\ApprovalMaintenance;
 
-// Delete .received files that match .approved files
 ApprovalMaintenance::cleanUpReceivedFiles(__DIR__ . '/tests/approvals');
 ```
 
 ### Detect Orphaned Files
+
+Find `.approved` files without associated tests:
+
 ```php
-// Find .approved files without associated tests
 $orphanedFiles = ApprovalMaintenance::findOrphanedApprovedFiles(__DIR__ . '/tests');
 ```
 
 ## Reporters
 
-Reporters define how differences are reported.
+Customize how differences are reported:
 
 ### CLI Reporter
+
+Default reporter for terminal output:
 
 ```php
 use ChqThomas\ApprovalTests\Reporter\CliReporter;
 
-// Default configuration
 Configuration::getInstance()->setReporter(new CliReporter());
 ```
 
 ### Diff Reporter
 
+Show differences using a diff format:
+
 ```php
 use ChqThomas\ApprovalTests\Reporter\DiffReporter;
 
-// Show differences using diff
 Configuration::getInstance()->setReporter(new DiffReporter());
 ```
 
 ### Composite Reporter
 
+Combine multiple reporters:
+
 ```php
 use ChqThomas\ApprovalTests\Reporter\CompositeReporter;
 
-// Combine multiple reporters
 $reporter = new CompositeReporter([
     new CliReporter(),
     new DiffReporter()
@@ -351,20 +496,40 @@ $reporter = new CompositeReporter([
 Configuration::getInstance()->setReporter($reporter);
 ```
 
+## Symfony Integration
+
+Use with Symfony’s DomCrawler for web testing:
+
+```php
+use ChqThomas\ApprovalTests\Symfony\ApprovalCrawlerAssertionsTrait;
+
+class MyWebTest extends WebTestCase
+{
+use ApprovalCrawlerAssertionsTrait;
+
+    public function testPageContent(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/');
+        self::verifySelectorHtml('#main-content');
+    }
+}
+```
+
 ## Best Practices
 
-1. Store approved files in version control
-2. Use scrubbers for variable data (dates, IDs, etc.)
-3. Regularly clean up received files
-4. Check for orphaned approved files
-5. Use descriptive test names
+1. Store `.approved` files in version control.
+2. Use scrubbers for variable data (e.g., dates, IDs).
+3. Regularly clean up `.received` files.
+4. Check for orphaned `.approved` files.
+5. Use descriptive test names for clear file naming.
 
 ## Contributing
 
-Contributions are welcome! Feel free to:
-1. Fork the project
-2. Create a feature branch
-3. Submit a pull request
+Contributions are welcome! To contribute:
+1. Fork the project.
+2. Create a feature branch.
+3. Submit a pull request.
 
 ## License
 
