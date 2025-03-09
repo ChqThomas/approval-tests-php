@@ -2,25 +2,34 @@
 
 namespace ChqThomas\ApprovalTests;
 
-use ChqThomas\ApprovalTests\Core\ApprovalReporter;
-use ChqThomas\ApprovalTests\Core\Scrubber;
+use ChqThomas\ApprovalTests\FileApprover\FileApprover;
+use ChqThomas\ApprovalTests\FileApprover\FileApproverFactory;
+use ChqThomas\ApprovalTests\FileApprover\FileApproverInterface;
 use ChqThomas\ApprovalTests\Formatter\DefaultObjectFormatter;
 use ChqThomas\ApprovalTests\Formatter\ObjectFormatterInterface;
 use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
+use ChqThomas\ApprovalTests\Namer\NamerInterface;
+use ChqThomas\ApprovalTests\Namer\TestNamer;
 use ChqThomas\ApprovalTests\Reporter\ReporterFactory;
+use ChqThomas\ApprovalTests\Reporter\ReporterInterface;
 use ChqThomas\ApprovalTests\Scrubber\CsvScrubber;
 use ChqThomas\ApprovalTests\Scrubber\HtmlScrubber;
 use ChqThomas\ApprovalTests\Scrubber\JsonScrubber;
 use ChqThomas\ApprovalTests\Scrubber\RegexScrubber;
+use ChqThomas\ApprovalTests\Scrubber\ScrubberInterface;
 use ChqThomas\ApprovalTests\Scrubber\TextScrubber;
 use ChqThomas\ApprovalTests\Scrubber\XmlScrubber;
 
 class Configuration
 {
     private static ?Configuration $instance = null;
-    private ?ApprovalReporter $reporter = null;
+    private ?ReporterInterface $reporter = null;
+    /** @var class-string<NamerInterface>|null  */
+    private ?string $namerClass = null;
     private ?ObjectFormatterInterface $objectFormatter = null;
-    /** @var array<string, Scrubber> */
+    private ?FileApproverFactory $fileApproverFactory = null;
+
+    /** @var array<string, ScrubberInterface> */
     private array $defaultScrubbers = [];
     private bool $autoApprove = false;
 
@@ -32,10 +41,11 @@ class Configuration
             ->setDefaultScrubber('csv', new CsvScrubber())
             ->setDefaultScrubber('regex', new RegexScrubber())
             ->setDefaultScrubber('html', new HtmlScrubber())
-            ->setDefaultScrubber('text', new TextScrubber());
+            ->setDefaultScrubber('text', new TextScrubber())
+            ->setReporter(ReporterFactory::getDefaultReporter())
+            ->setNamerClass(TestNamer::class)
+            ->setFileApproverFactory(new FileApproverFactory(FileApprover::class, TestNamer::class))
         ;
-
-        $this->setReporter(ReporterFactory::getDefaultReporter());
 
         if (class_exists(\Symfony\Component\Serializer\Serializer::class)) {
             $this->objectFormatter = new SymfonyObjectFormatter();
@@ -53,14 +63,14 @@ class Configuration
     }
 
     // Getters et Setters
-    public function setReporter(ApprovalReporter $reporter): self
+    public function setReporter(ReporterInterface $reporter): self
     {
         $this->reporter = $reporter;
 
         return $this;
     }
 
-    public function getReporter(): ApprovalReporter
+    public function getReporter(): ReporterInterface
     {
         return $this->reporter;
     }
@@ -77,13 +87,13 @@ class Configuration
         return $this->objectFormatter;
     }
 
-    public function setDefaultScrubber(string $format, Scrubber $scrubber): self
+    public function setDefaultScrubber(string $format, ScrubberInterface $scrubber): self
     {
         $this->defaultScrubbers[$format] = $scrubber;
         return $this;
     }
 
-    public function getDefaultScrubber(string $format): ?Scrubber
+    public function getDefaultScrubber(string $format): ?ScrubberInterface
     {
         return $this->defaultScrubbers[$format] ?? null;
     }
@@ -91,6 +101,30 @@ class Configuration
     public function setAutoApprove(bool $autoApprove): self
     {
         $this->autoApprove = $autoApprove;
+
+        return $this;
+    }
+
+    public function getNamerClass(): string
+    {
+        return $this->namerClass;
+    }
+
+    public function setNamerClass(string $namerClass): self
+    {
+        $this->namerClass = $namerClass;
+
+        return $this;
+    }
+
+    public function getFileApproverFactory(): ?FileApproverFactory
+    {
+        return $this->fileApproverFactory;
+    }
+
+    public function setFileApproverFactory(?FileApproverFactory $fileApproverFactory): self
+    {
+        $this->fileApproverFactory = $fileApproverFactory;
 
         return $this;
     }

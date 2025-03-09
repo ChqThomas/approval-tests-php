@@ -2,9 +2,7 @@
 
 namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ChqThomas\ApprovalTests\Core\Scrubber;
-
-class RegexScrubber implements Scrubber
+class RegexScrubber implements ScrubberInterface
 {
     private array $regexReplacements = [];
 

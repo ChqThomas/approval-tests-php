@@ -2,9 +2,7 @@
 
 namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ChqThomas\ApprovalTests\Core\Scrubber;
-
-class CallbackScrubber implements Scrubber
+class CallbackScrubber implements ScrubberInterface
 {
     private $callback;
 

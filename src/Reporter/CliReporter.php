@@ -2,11 +2,9 @@
 
 namespace ChqThomas\ApprovalTests\Reporter;
 
-use ChqThomas\ApprovalTests\Core\ApprovalReporter;
-
-class CliReporter implements ApprovalReporter
+class CliReporter implements ReporterInterface
 {
-    public function report(string $receivedFile, string $approvedFile): void
+    public function report(string $approvedFile, string $receivedFile): void
     {
         // Do nothing as PHPUnit already handles error display
     }

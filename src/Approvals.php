@@ -3,10 +3,7 @@
 namespace ChqThomas\ApprovalTests;
 
 use ChqThomas\ApprovalTests\Combinations\CombinationApprovals;
-use ChqThomas\ApprovalTests\FileApprover\FileApprover;
 use ChqThomas\ApprovalTests\Formatter\SymfonyObjectFormatter;
-use ChqThomas\ApprovalTests\Namer\EnvironmentAwareNamer;
-use ChqThomas\ApprovalTests\Namer\TestNamer;
 use ChqThomas\ApprovalTests\Scrubber\CsvScrubber;
 use ChqThomas\ApprovalTests\Scrubber\HtmlScrubber;
 use ChqThomas\ApprovalTests\Scrubber\JsonScrubber;
@@ -23,7 +20,7 @@ class Approvals
 
     public static function verify($objectToVerify): void
     {
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $text = is_string($objectToVerify)
             ? $objectToVerify
             : ((is_object($objectToVerify) || is_array($objectToVerify))
@@ -46,7 +43,7 @@ class Approvals
 
     public static function verifyHtml(string $html, ?HtmlScrubber $scrubber = null): void
     {
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('html');
 
         $scrubbedHtml = $scrubber->scrub($html);
@@ -56,7 +53,7 @@ class Approvals
 
     public static function verifyJson(string $json, ?JsonScrubber $scrubber = null): void
     {
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('json');
 
         $scrubbedJson = $scrubber->scrub($json);
@@ -66,7 +63,7 @@ class Approvals
 
     public static function verifyXml(string $xml, ?XmlScrubber $scrubber = null): void
     {
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('xml');
 
         $scrubbedXml = $scrubber->scrub($xml);
@@ -77,13 +74,13 @@ class Approvals
     public static function verifyFile(string $filePath): void
     {
         $content = file_get_contents($filePath);
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $approver->verify($content);
     }
 
     public static function verifyBinaryFile(string $filePath, string $extension): void
     {
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $content = file_get_contents($filePath);
         $writer = new BinaryWriter($filePath, $extension);
         $approver->verify($content, null, $writer);
@@ -93,13 +90,13 @@ class Approvals
     {
         $formatter = $formatter ?? fn ($item) => (string)$item;
         $text = implode("\n", array_map($formatter, $items));
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $approver->verify($text);
     }
 
     public static function verifyWithExtension(string $text, string $extension, ?callable $scrubber = null): void
     {
-        $approver = new FileApprover();
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
         $writer = new TextWriter($text, $extension);
 
         if ($scrubber) {
@@ -119,18 +116,13 @@ class Approvals
         CombinationApprovals::verifyAllCombinations($func, $parameters, $formatter);
     }
 
-    public static function verifyWithEnvironment(string $content, string $environmentName): void
+    public static function verifyCsv(string $csv, ?CsvScrubber $scrubber = null): void
     {
-        $approver = new FileApprover();
-        $namer = new EnvironmentAwareNamer(new TestNamer(), $environmentName);
-        $approver->setNamer($namer);
-        $approver->verify($content);
-    }
+        $approver = self::getConfig()->getFileApproverFactory()->createFileApprover();
+        $scrubber = $scrubber ?? self::getConfig()->getDefaultScrubber('csv');
 
-    public static function verifyCsv(string $csv): void
-    {
-        $approver = new FileApprover();
-        $writer = new TextWriter($csv, 'csv');
-        $approver->verify($csv, new CsvScrubber(), $writer);
+        $scrubbedCsv = $scrubber->scrub($csv);
+        $writer = new TextWriter($scrubbedCsv, 'csv');
+        $approver->verify($scrubbedCsv, $scrubber, $writer);
     }
 }

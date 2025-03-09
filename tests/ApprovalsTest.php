@@ -80,14 +80,6 @@ class ApprovalsTest extends TestCase
         );
     }
 
-    public function testVerifyWithEnvironment(): void
-    {
-        Approvals::verifyWithEnvironment(
-            "Content specific to Windows",
-            "Windows_10_Pro"
-        );
-    }
-
     public function testVerifyWithExtensionAndScrubber(): void
     {
         $content = "Date: 2024-01-01\nID: 12345\nContent: Test";

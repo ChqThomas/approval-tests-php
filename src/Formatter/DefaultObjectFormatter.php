@@ -96,7 +96,7 @@ class DefaultObjectFormatter implements ObjectFormatterInterface
         foreach ($array as $value) {
             if (is_object($value)) {
                 $formatted[] = $this->formatWithCircularCheck($value);
-            } else if (is_array($value)) {
+            } elseif (is_array($value)) {
                 $formatted[] = $this->formatArray($value);
             } else {
                 $formatted[] = var_export($value, true);

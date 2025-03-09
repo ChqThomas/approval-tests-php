@@ -2,8 +2,6 @@
 
 namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ChqThomas\ApprovalTests\Core\Scrubber;
-
 class XmlScrubber extends AbstractScrubber
 {
     public function scrub(string $content): string

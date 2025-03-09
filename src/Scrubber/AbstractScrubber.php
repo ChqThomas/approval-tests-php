@@ -2,21 +2,19 @@
 
 namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ChqThomas\ApprovalTests\Core\Scrubber;
-
-abstract class AbstractScrubber implements Scrubber
+abstract class AbstractScrubber implements ScrubberInterface
 {
     protected int $guidCounter = 1;
     protected int $dateCounter = 1;
     protected array $dateMap = [];
     protected array $guidMap = [];
-    /** @var array<callable|Scrubber> */
+    /** @var array<callable|ScrubberInterface> */
     protected array $additionalScrubbers = [];
     protected array $ignoredMembers = [];
     protected array $scrubbedMembers = [];
 
     /**
-     * @param callable|Scrubber $scrubber
+     * @param callable|ScrubberInterface $scrubber
      */
     public function addScrubber($scrubber): self
     {
@@ -78,7 +76,7 @@ abstract class AbstractScrubber implements Scrubber
     protected function applyAdditionalScrubbers(string $content): string
     {
         foreach ($this->additionalScrubbers as $scrubber) {
-            if ($scrubber instanceof Scrubber) {
+            if ($scrubber instanceof ScrubberInterface) {
                 $content = $scrubber->scrub($content);
             } elseif (\is_callable($scrubber)) {
                 $content = $scrubber($content);

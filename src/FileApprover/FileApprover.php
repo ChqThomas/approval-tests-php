@@ -2,24 +2,23 @@
 
 namespace ChqThomas\ApprovalTests\FileApprover;
 
-use ChqThomas\ApprovalTests\Core\ApprovalNamer;
-use ChqThomas\ApprovalTests\Namer\TestNamer;
+use ChqThomas\ApprovalTests\Namer\NamerInterface;
 
 class FileApprover extends FileApproverBase
 {
-    private ApprovalNamer $namer;
+    private NamerInterface $namer;
 
-    public function __construct()
+    public function __construct(NamerInterface $namer)
     {
-        $this->namer = new TestNamer();
+        $this->namer = $namer;
     }
 
-    protected function getNamer(): ApprovalNamer
+    protected function getNamer(): NamerInterface
     {
         return $this->namer;
     }
 
-    public function setNamer(ApprovalNamer $namer): void
+    public function setNamer(NamerInterface $namer): void
     {
         $this->namer = $namer;
     }

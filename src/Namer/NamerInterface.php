@@ -1,8 +1,8 @@
 <?php
 
-namespace ChqThomas\ApprovalTests\Core;
+namespace ChqThomas\ApprovalTests\Namer;
 
-interface ApprovalNamer
+interface NamerInterface
 {
     public function getApprovedFile(): string;
     public function getReceivedFile(): string;

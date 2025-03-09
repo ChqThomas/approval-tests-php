@@ -2,9 +2,7 @@
 
 namespace ChqThomas\ApprovalTests\Scrubber;
 
-use ChqThomas\ApprovalTests\Core\Scrubber;
-
-abstract class ScrubberBase implements Scrubber
+abstract class ScrubberBase implements ScrubberInterface
 {
     protected array $replacements = [];
 

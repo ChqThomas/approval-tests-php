@@ -2,14 +2,12 @@
 
 namespace ChqThomas\ApprovalTests\Reporter;
 
-use ChqThomas\ApprovalTests\Core\ApprovalReporter;
-
 class ReporterFactory
 {
     private static array $reporters = [];
-    private static ?ApprovalReporter $defaultReporter = null;
+    private static ?ReporterInterface $defaultReporter = null;
 
-    public static function get(string $reporterClass): ApprovalReporter
+    public static function get(string $reporterClass): ReporterInterface
     {
         if (!isset(self::$reporters[$reporterClass])) {
             self::$reporters[$reporterClass] = new $reporterClass();
@@ -17,7 +15,7 @@ class ReporterFactory
         return self::$reporters[$reporterClass];
     }
 
-    public static function getDefaultReporter(): ApprovalReporter
+    public static function getDefaultReporter(): ReporterInterface
     {
         if (self::$defaultReporter === null) {
             self::$defaultReporter = new CliReporter();
@@ -25,7 +23,7 @@ class ReporterFactory
         return self::$defaultReporter;
     }
 
-    public static function setDefaultReporter(ApprovalReporter $reporter): void
+    public static function setDefaultReporter(ReporterInterface $reporter): void
     {
         self::$defaultReporter = $reporter;
     }

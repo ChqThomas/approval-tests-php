@@ -3,23 +3,23 @@
 namespace ChqThomas\ApprovalTests\FileApprover;
 
 use ChqThomas\ApprovalTests\Configuration;
-use ChqThomas\ApprovalTests\Core\ApprovalNamer;
-use ChqThomas\ApprovalTests\Core\ApprovalReporter;
-use ChqThomas\ApprovalTests\Core\Scrubber;
 use ChqThomas\ApprovalTests\CustomApprovalException;
+use ChqThomas\ApprovalTests\Namer\NamerInterface;
+use ChqThomas\ApprovalTests\Reporter\ReporterInterface;
+use ChqThomas\ApprovalTests\Scrubber\ScrubberInterface;
 use ChqThomas\ApprovalTests\Writer\ApprovalWriter;
 use ChqThomas\ApprovalTests\Writer\TextWriter;
 use PHPUnit\Framework\Assert;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
-abstract class FileApproverBase
+abstract class FileApproverBase implements FileApproverInterface
 {
-    protected function getReporter(): ApprovalReporter
+    protected function getReporter(): ReporterInterface
     {
         return Configuration::getInstance()->getReporter();
     }
 
-    abstract protected function getNamer(): ApprovalNamer;
+    abstract protected function getNamer(): NamerInterface;
 
     protected function normalizeLineEndings(string $text): string
     {
@@ -35,7 +35,7 @@ abstract class FileApproverBase
         return rtrim($text);
     }
 
-    public function verify($received, ?Scrubber $scrubber = null, ?ApprovalWriter $writer = null): void
+    public function verify($received, ?ScrubberInterface $scrubber = null, ?ApprovalWriter $writer = null): void
     {
         $receivedText = $this->prepareReceivedText($received, $scrubber);
         $writer = $this->prepareWriter($receivedText, $writer);
@@ -50,7 +50,7 @@ abstract class FileApproverBase
         $this->compareFiles($files, $receivedText);
     }
 
-    protected function prepareReceivedText($received, ?Scrubber $scrubber): string
+    protected function prepareReceivedText($received, ?ScrubberInterface $scrubber): string
     {
         $text = $scrubber ? $scrubber->scrub($received) : $received;
         return $this->normalizeLineEndings($text);
@@ -85,8 +85,7 @@ abstract class FileApproverBase
         file_put_contents($files['approved'], '');
         $this->getReporter()->report($files['received'], $files['approved']);
         throw new CustomApprovalException(
-            "New test: please verify the received file and copy it to approved if correct.\n" .
-            sprintf("mv %s %s", $files['received'], $files['approved']),
+            "New test: please verify the received file and copy it to approved if correct.\n",
             $files['approved'],
             $files['received']
         );
@@ -95,6 +94,7 @@ abstract class FileApproverBase
     protected function formatFileLink(string $path): string
     {
         $realPath = realpath($path);
+        // @todo not needed when run from phpstorm terminal
         $url = sprintf('phpstorm://open?file=%s&line=%s', rawurlencode($realPath), 0);
         return sprintf("\x1b]8;;%s\x1b\\%s\x1b]8;;\x1b\\", $url, $realPath);
     }

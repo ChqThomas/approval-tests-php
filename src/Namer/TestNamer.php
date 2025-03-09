@@ -2,11 +2,10 @@
 
 namespace ChqThomas\ApprovalTests\Namer;
 
-use ChqThomas\ApprovalTests\Core\ApprovalNamer;
 use ChqThomas\ApprovalTests\ApprovalException;
 use PHPUnit\Framework\TestCase;
 
-class TestNamer implements ApprovalNamer
+class TestNamer implements NamerInterface
 {
     private ?string $testClass = null;
     private ?string $testMethod = null;

@@ -2,14 +2,12 @@
 
 namespace ChqThomas\ApprovalTests\Namer;
 
-use ChqThomas\ApprovalTests\Core\ApprovalNamer;
-
-class EnvironmentAwareNamer implements ApprovalNamer
+class EnvironmentAwareNamer implements NamerInterface
 {
-    private ApprovalNamer $baseNamer;
+    private NamerInterface $baseNamer;
     private string $environmentName;
 
-    public function __construct(ApprovalNamer $baseNamer, string $environmentName)
+    public function __construct(NamerInterface $baseNamer, string $environmentName)
     {
         $this->baseNamer = $baseNamer;
         $this->environmentName = $environmentName;
